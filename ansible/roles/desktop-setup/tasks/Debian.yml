@@ -14,3 +14,24 @@
   systemd:
     name: 'polkit'
     state: 'restarted'
+
+- name: GTK Theme directory created
+  file:
+    path: '/home/exouser/.config/gtk-3.0'
+    state: 'directory'
+
+- name: XFCE Workspace Changer theme
+  copy:
+    src: 'gtk.css'
+    dest: '/home/exouser/.config/gtk-3.0/gtk.css'
+
+- name: XFCE Screensaver configuration directory created
+  file:
+    path: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml'
+    state: 'directory'
+
+- name: XFCE Screensaver configuration
+  copy:
+    src: 'xfce4-screensaver.xml'
+    dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-screensaver.xml'
+    mode: '755'
