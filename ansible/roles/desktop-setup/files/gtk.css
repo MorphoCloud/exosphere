@@ -1,0 +1,7 @@
+wnck-pager:selected {
+  background-color: DodgerBlue;
+}
+
+wnck-pager:hover {
+  background-color: gray;
+}
