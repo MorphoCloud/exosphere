@@ -6,6 +6,6 @@ test x"$1"     = x"" && set -- default
 vncconfig -iconic &
 "$SHELL" -l << EOF
 export XDG_SESSION_TYPE=x11
-dbus-launch --exit-with-session gnome-session
+dbus-launch --exit-with-session startxfce4
 EOF
 vncserver -kill $DISPLAY
