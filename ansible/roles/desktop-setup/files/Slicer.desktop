@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=3D Slicer
+Comment=
+Exec=bash -ic '/home/exouser/Slicer/Slicer'
+Icon=/home/exouser/Slicer/lib/Slicer-5.6/qt-scripted-modules/Resources/SlicerWatermark.png
+Path=
+Terminal=false
+StartupNotify=false
