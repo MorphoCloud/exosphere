@@ -35,3 +35,13 @@
     src: 'xfce4-screensaver.xml'
     dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-screensaver.xml'
     mode: '755'
+
+- name: XFCE Desktop directory created
+  file:
+    path: '/home/exouser/.config/xfce4/panel/launcher-21'
+    state: 'directory'
+
+- name: Add Slicer.desktop
+  copy:
+    src: 'Slicer.desktop'
+    dest: '/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop'
