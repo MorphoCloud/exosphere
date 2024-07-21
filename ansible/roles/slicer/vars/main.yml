@@ -8,4 +8,4 @@ slicer_release_id: "5.2.2"
 
 slicer_extensions:
   - SlicerMorph
-  - SurfaceWarpSolidy
+  - SurfaceWrapSolidify
