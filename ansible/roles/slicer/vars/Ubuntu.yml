@@ -1,0 +1,9 @@
+---
+
+slicer_prerequisites_package_names:
+  - 'libglu1-mesa'
+  - 'libpulse-mainloop-glib0'
+  - 'libnss3'
+  - 'libasound2'
+  - 'qt5dxcb-plugin'
+  - 'libsm6'
