@@ -7,3 +7,5 @@ slicer_prerequisites_package_names:
   - 'libasound2'
   - 'qt5dxcb-plugin'
   - 'libsm6'
+  # Required by "slicer-download.sh"
+  - 'jq'
