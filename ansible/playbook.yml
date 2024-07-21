@@ -34,3 +34,4 @@
       tags:
         - 'workflow'
       when: 'workflow_source_repository is defined'
+    - role: 'slicer'
