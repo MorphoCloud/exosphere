@@ -15,3 +15,16 @@
     name: '{{ item }}'
     state: 'present'
   loop: '{{ slicer_prerequisites_package_names }}'
+
+- name: 'download helper script downloaded'
+  get_url:
+    url: "https://github.com/Slicer/SlicerDocker/blob/e9353bd4e1b861c5fb78ac4cd90553696b119d22/scripts/slicer-download.sh"
+    dest: "{{ install_dir }}/dist/slicer-download.sh"
+    mode: "744"
+
+- name: 'Slicer application installed'
+  command: "{{ install_dir }}/dist/slicer-download.sh -v {{ slicer_release_id }} -s"
+
+- name: 'Slicer extensions installed'
+  command: "{{ install_dir }}/dist/slicer-download.sh -v {{ slicer_release_id }} -e {{ item }}"
+  loop: '{{ slicer_prerequisites_package_names }}'
