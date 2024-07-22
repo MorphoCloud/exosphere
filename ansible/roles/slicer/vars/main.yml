@@ -7,7 +7,7 @@ install_dir: "/home/exouser"
 slicer_version:
   major: 5
   minor: 6
-  patch: 6
+  patch: 2
 
 slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
 
