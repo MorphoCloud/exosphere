@@ -8,4 +8,6 @@ slicer_prerequisites_package_names:
   - 'qt5dxcb-plugin'
   - 'libsm6'
   # Required by "slicer-download.sh"
+  - 'curl'
   - 'jq'
+  - 'rsync'
