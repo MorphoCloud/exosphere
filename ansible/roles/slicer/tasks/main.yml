@@ -43,6 +43,8 @@
   become: yes
   become_user: exouser
   command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -s"
+  args:
+    creates: "{{ install_dir }}/Slicer"
 
 - name: 'File "Slicer.desktop" installed'
   copy:
