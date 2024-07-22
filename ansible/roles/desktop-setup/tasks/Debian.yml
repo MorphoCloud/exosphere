@@ -19,25 +19,35 @@
   file:
     path: '/home/exouser/.config/gtk-3.0'
     state: 'directory'
+    owner: 'exouser'
+    group: 'exouser'
 
 - name: XFCE Workspace Changer theme
   copy:
     src: 'gtk.css'
     dest: '/home/exouser/.config/gtk-3.0/gtk.css'
+    owner: 'exouser'
+    group: 'exouser'
 
 - name: XFCE Screensaver configuration directory created
   file:
     path: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml'
     state: 'directory'
+    owner: 'exouser'
+    group: 'exouser'
 
 - name: XFCE Screensaver configuration
   copy:
     src: 'xfce4-screensaver.xml'
     dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-screensaver.xml'
     mode: '755'
+    owner: 'exouser'
+    group: 'exouser'
 
 - name: XFCE Desktop directory created
   file:
     path: '/home/exouser/.config/xfce4/panel/launcher-21'
     state: 'directory'
+    owner: 'exouser'
+    group: 'exouser'
 
