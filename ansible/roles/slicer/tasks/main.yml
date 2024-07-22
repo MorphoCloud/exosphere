@@ -66,3 +66,21 @@
   become_user: exouser
   command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -e {{ item }}"
   loop: '{{ slicer_extensions }}'
+
+- name: 'File "husky_small.png" downloaded'
+  get_url:
+    url: "https://raw.githubusercontent.com/SlicerMorph/Images/main/husky_small.png"
+    dest: "/home/exouser/Downloads/husky_small.png"
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+  when: 'gui_enabled is defined and gui_enabled == true'
+
+- name: 'File "xfce4-desktop.xml" installed'
+  copy:
+    src: 'xfce4-desktop.xml'
+    dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml'
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+  when: 'gui_enabled is defined and gui_enabled == true'
