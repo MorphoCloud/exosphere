@@ -21,9 +21,15 @@
     path: "{{ install_dir }}/dist"
     state: directory
 
-- name: 'helper script downloaded'
-  get_url:
-    url: "https://raw.githubusercontent.com/Slicer/SlicerDocker/e9353bd4e1b861c5fb78ac4cd90553696b119d22/scripts/slicer-download.sh"
+#- name: 'helper script downloaded'
+#  get_url:
+#    url: "https://raw.githubusercontent.com/Slicer/SlicerDocker/e9353bd4e1b861c5fb78ac4cd90553696b119d22/scripts/slicer-download.sh"
+#    dest: "{{ install_dir }}/dist/slicer-download.sh"
+#    mode: "744"
+
+- name: 'File "slicer-download.sh" copied'
+  copy:
+    src: 'slicer-download.sh'
     dest: "{{ install_dir }}/dist/slicer-download.sh"
     mode: "744"
 
