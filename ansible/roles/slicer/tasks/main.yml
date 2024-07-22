@@ -57,8 +57,8 @@
 - name: 'Placeholder "Slicer-X.Y" updated in file "Slicer.desktop"'
   ansible.builtin.replace:
     path: "/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop"
-    regexp: '(\s+)Slicer-X\.Y(\s+.*)?$'
-    replace: '\1Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}\2'
+    regexp: 'Slicer\-X\.Y'
+    replace: 'Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}'
   when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'Slicer extensions installed'
