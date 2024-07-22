@@ -20,33 +20,47 @@
   ansible.builtin.file:
     path: "{{ install_dir }}/dist"
     state: directory
+    owner: "exouser"
+    group: "exouser"
 
 #- name: 'helper script downloaded'
 #  get_url:
 #    url: "https://raw.githubusercontent.com/Slicer/SlicerDocker/e9353bd4e1b861c5fb78ac4cd90553696b119d22/scripts/slicer-download.sh"
 #    dest: "{{ install_dir }}/dist/slicer-download.sh"
 #    mode: "744"
+#    owner: "exouser"
+#    group: "exouser"
 
 - name: 'File "slicer-download.sh" copied'
   copy:
     src: 'slicer-download.sh'
     dest: "{{ install_dir }}/dist/slicer-download.sh"
     mode: "744"
+    owner: "exouser"
+    group: "exouser"
 
 - name: 'Slicer application installed'
+  become: yes
+  become_user: exouser
   command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -s"
 
 - name: 'File "Slicer.desktop" installed'
   copy:
     src: 'Slicer.desktop'
     dest: '/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop'
+    owner: "exouser"
+    group: "exouser"
+  when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'Placeholder "Slicer-X.Y" updated in file "Slicer.desktop"'
   ansible.builtin.replace:
     path: "/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop"
     regexp: '(\s+)Slicer-X\.Y(\s+.*)?$'
     replace: '\1Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}\2'
+  when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'Slicer extensions installed'
+  become: yes
+  become_user: exouser
   command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -e {{ item }}"
   loop: '{{ slicer_extensions }}'
