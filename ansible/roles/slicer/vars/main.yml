@@ -4,7 +4,12 @@ download_dir: "/home/exouser/Downloads/"
 
 install_dir: "/home/exouser"
 
-slicer_release_id: "5.2.2"
+slicer_version:
+  major: 5
+  minor: 6
+  patch: 6
+
+slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
 
 slicer_extensions:
   - SlicerMorph

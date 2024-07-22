@@ -41,7 +41,3 @@
     path: '/home/exouser/.config/xfce4/panel/launcher-21'
     state: 'directory'
 
-- name: Add Slicer.desktop
-  copy:
-    src: 'Slicer.desktop'
-    dest: '/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop'
