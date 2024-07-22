@@ -30,6 +30,17 @@
 - name: 'Slicer application installed'
   command: "{{ install_dir }}/dist/slicer-download.sh -v {{ slicer_release_id }} -s"
 
+- name: 'File "Slicer.desktop" installed'
+  copy:
+    src: 'Slicer.desktop'
+    dest: '/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop'
+
+- name: 'Placeholder "Slicer-X.Y" updated in file "Slicer.desktop"'
+  ansible.builtin.replace:
+    path: "/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop"
+    regexp: '(\s+)Slicer-X\.Y(\s+.*)?$'
+    replace: '\1Slicer-{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}\2'
+
 - name: 'Slicer extensions installed'
   command: "{{ install_dir }}/dist/slicer-download.sh -v {{ slicer_release_id }} -e {{ item }}"
   loop: '{{ slicer_extensions }}'
