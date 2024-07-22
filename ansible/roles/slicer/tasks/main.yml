@@ -28,7 +28,7 @@
     mode: "744"
 
 - name: 'Slicer application installed'
-  command: "{{ install_dir }}/dist/slicer-download.sh -v {{ slicer_release_id }} -s"
+  command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -s"
 
 - name: 'File "Slicer.desktop" installed'
   copy:
@@ -42,5 +42,5 @@
     replace: '\1Slicer-{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}\2'
 
 - name: 'Slicer extensions installed'
-  command: "{{ install_dir }}/dist/slicer-download.sh -v {{ slicer_release_id }} -e {{ item }}"
+  command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -e {{ item }}"
   loop: '{{ slicer_extensions }}'
