@@ -39,7 +39,7 @@
   ansible.builtin.replace:
     path: "/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop"
     regexp: '(\s+)Slicer-X\.Y(\s+.*)?$'
-    replace: '\1Slicer-{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}\2'
+    replace: '\1Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}\2'
 
 - name: 'Slicer extensions installed'
   command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -e {{ item }}"
