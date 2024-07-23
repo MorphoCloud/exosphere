@@ -54,21 +54,21 @@
 - name: 'File "Slicer.desktop" installed as panel launcher'
   copy:
     src: 'Slicer.desktop'
-    dest: '/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop'
+    dest: '/usr/share/applications/Slicer.desktop'
     owner: "exouser"
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'Placeholder "Slicer-X.Y" updated in file "Slicer.desktop"'
   ansible.builtin.replace:
-    path: "/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop"
+    path: "/usr/share/applications/Slicer.desktop"
     regexp: 'Slicer\-X\.Y'
     replace: 'Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}'
   when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'File "Slicer.desktop" installed as Desktop launcher'
   copy:
-    src: '/home/exouser/.config/xfce4/panel/launcher-21/Slicer.desktop'
+    src: '/usr/share/applications/Slicer.desktop'
     dest: '/home/exouser/Desktop/Slicer.desktop'
     owner: "exouser"
     group: "exouser"
