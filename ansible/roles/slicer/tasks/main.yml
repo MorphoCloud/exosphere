@@ -98,6 +98,9 @@
     property: "/Net/ThemeName"
     value_type: "string"
     value: "Yaru-magenta"
+  environment:
+    XAUTHORITY: /home/exouser/.Xauthority
+    DISPLAY: :1.0
 
 - name: 'Icon theme name updated to "Yaru-magenta"'
   become: yes
@@ -107,6 +110,9 @@
     property: "/Net/IconThemeName"
     value_type: "string"
     value: "Yaru-magenta"
+  environment:
+    XAUTHORITY: /home/exouser/.Xauthority
+    DISPLAY: :1.0
 
 - name: 'Desktop background updated'
   become: yes
@@ -116,6 +122,9 @@
     property: "/backdrop/screen0/monitorVNC-0/workspace0/last-image"
     value_type: "string"
     value: "/home/exouser/Downloads/husky_small.png"
+  environment:
+    XAUTHORITY: /home/exouser/.Xauthority
+    DISPLAY: :1.0
 
 - name: 'Desktop background centered'
   become: yes
@@ -125,6 +134,9 @@
     property: "/backdrop/screen0/monitorVNC-0/workspace0/image-style"
     value_type: "int"
     value: "1"
+  environment:
+    XAUTHORITY: /home/exouser/.Xauthority
+    DISPLAY: :1.0
 
 - name: Start service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
