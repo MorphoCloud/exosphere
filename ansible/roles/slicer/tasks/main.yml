@@ -98,14 +98,19 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
-- name: 'File "xsettings.xml" installed'
-  copy:
-    src: 'xsettings.xml'
-    dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml'
-    mode: "644"
-    owner: "exouser"
-    group: "exouser"
-  when: 'gui_enabled is defined and gui_enabled == true'
+- name: Update Xfce4 settings ThemeName
+  community.general.xml:
+    attribute: value
+    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+    value: Yaru-magenta
+    xpath: //property[@name="ThemeName"]
+
+- name: Update Xfce4 settings IconThemeName
+  community.general.xml:
+    attribute: value
+    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+    value: Yaru-magenta
+    xpath: //property[@name="IconThemeName"]
 
 - name: Start service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
