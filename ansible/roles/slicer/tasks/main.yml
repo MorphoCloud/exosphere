@@ -89,36 +89,13 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
-#- name: 'File "xfce4-desktop.xml" installed'
-#  copy:
-#    src: 'xfce4-desktop.xml'
-#    dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml'
-#    mode: "644"
-#    owner: "exouser"
-#    group: "exouser"
-#  when: 'gui_enabled is defined and gui_enabled == true'
-
-- name: Configure Xfce4 desktop configuration file
-  block:
-    - name: Check if Xfce4 desktop configuration file exists
-      ansible.builtin.stat:
-        path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
-      register: xfce4_desktop_config
-
-    - name: Create Xfce4 desktop configuration if necessary
-      ansible.builtin.copy:
-        dest: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
-        mode: 0644
-        src: xfce4-desktop.xml
-      when:
-        - not xfce4_desktop_config.stat.exists
-
-    - name: Set SlicerMorph desktop background
-      community.general.xml:
-        attribute: value
-        path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
-        value: /home/exouser/Downloads/husky_small.png
-        xpath: //property[@name="last-image"]
+- name: 'File "xfce4-desktop.xml" installed'
+  copy:
+    src: 'xfce4-desktop.xml'
+    dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml'
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: Update Xfce4 settings ThemeName
