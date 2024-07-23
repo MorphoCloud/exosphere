@@ -27,6 +27,12 @@
     name: apt-daily-upgrade.timer
     state: started
 
+- name: 'xfce4-web-browser icon updated'
+  ansible.builtin.lineinfile:
+    path: /usr/share/applications/xfce4-web-browser.desktop
+    regexp: '^Icon='
+    line: Icon=firefox
+
 - name: 'graphical environment started on boot'
   systemd:
     name: 'graphical.target'
