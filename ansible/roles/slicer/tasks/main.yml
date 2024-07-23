@@ -89,28 +89,15 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
-- name: 'File "xfce4-desktop.xml" installed'
-  copy:
-    src: 'xfce4-desktop.xml'
-    dest: '/home/exouser/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml'
-    mode: "644"
-    owner: "exouser"
-    group: "exouser"
-  when: 'gui_enabled is defined and gui_enabled == true'
-
-- name: Update Xfce4 settings ThemeName
-  community.general.xml:
-    attribute: value
-    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
-    value: Yaru-magenta
-    xpath: //property[@name="ThemeName"]
-
-- name: Update Xfce4 settings IconThemeName
-  community.general.xml:
-    attribute: value
-    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
-    value: Yaru-magenta
-    xpath: //property[@name="IconThemeName"]
+# See https://github.com/jamescherti/watch-xfce-xfconf
+- name: 'xfce4 settings updated'
+  become: yes
+  become_user: exouser
+  command: |
+    xfconf-query --create -c 'xsettings' -p '/Net/ThemeName' --type 'string' --set 'Yaru-magenta'
+    xfconf-query --create -c 'xsettings' -p '/Net/IconThemeName' --type 'string' --set 'Yaru-magenta'
+    xfconf-query --create -c 'xfce4-desktop' -p '/backdrop/screen0/monitorVNC-0/workspace0/last-image' --type 'string' --set '/home/exouser/Downloads/husky_small.png'
+    xfconf-query --create -c 'xfce4-desktop' -p '/backdrop/screen0/monitorVNC-0/workspace0/image-style' --type 'int' --set '1'
 
 - name: Start service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
