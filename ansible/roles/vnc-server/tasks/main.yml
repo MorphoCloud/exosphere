@@ -11,11 +11,21 @@
       paths:
         - "{{ role_path }}/vars"
 
+- name: Stop service apt-daily-upgrade.timer
+  ansible.builtin.systemd_service:
+    name: apt-daily-upgrade.timer
+    state: stopped
+
 - name: 'VNC server packages installed'
   package:
     name: '{{ item }}'
     state: 'present'
   loop: '{{ vncserver_packages }}'
+
+- name: Stop service apt-daily-upgrade.timer
+  ansible.builtin.systemd_service:
+    name: apt-daily-upgrade.timer
+    state: started
 
 - name: 'user-specific VNC configuration directory created'
   file:
