@@ -90,14 +90,41 @@
   when: 'gui_enabled is defined and gui_enabled == true'
 
 # See https://github.com/jamescherti/watch-xfce-xfconf
-- name: 'xfce4 settings updated'
+- name: 'Theme name updated to "Yaru-magenta"'
   become: yes
   become_user: exouser
-  command: |
-    xfconf-query --create -c 'xsettings' -p '/Net/ThemeName' --type 'string' --set 'Yaru-magenta'
-    xfconf-query --create -c 'xsettings' -p '/Net/IconThemeName' --type 'string' --set 'Yaru-magenta'
-    xfconf-query --create -c 'xfce4-desktop' -p '/backdrop/screen0/monitorVNC-0/workspace0/last-image' --type 'string' --set '/home/exouser/Downloads/husky_small.png'
-    xfconf-query --create -c 'xfce4-desktop' -p '/backdrop/screen0/monitorVNC-0/workspace0/image-style' --type 'int' --set '1'
+  xfconf:
+    channel: "xsettings"
+    property: "/Net/ThemeName"
+    value_type: "string"
+    value: "Yaru-magenta"
+
+- name: 'Icon theme name updated to "Yaru-magenta"'
+  become: yes
+  become_user: exouser
+  xfconf:
+    channel: "xsettings"
+    property: "/Net/IconThemeName"
+    value_type: "string"
+    value: "Yaru-magenta"
+
+- name: 'Desktop background updated'
+  become: yes
+  become_user: exouser
+  xfconf:
+    channel: "xfce4-desktop"
+    property: "/backdrop/screen0/monitorVNC-0/workspace0/last-image"
+    value_type: "string"
+    value: "/home/exouser/Downloads/husky_small.png"
+
+- name: 'Desktop background centered'
+  become: yes
+  become_user: exouser
+  xfconf:
+    channel: "xfce4-desktop"
+    property: "/backdrop/screen0/monitorVNC-0/workspace0/image-style"
+    value_type: "int"
+    value: "1"
 
 - name: Start service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
