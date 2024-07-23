@@ -44,10 +44,4 @@
     owner: 'exouser'
     group: 'exouser'
 
-- name: XFCE Desktop directory created
-  file:
-    path: '/home/exouser/.config/xfce4/panel/launcher-21'
-    state: 'directory'
-    owner: 'exouser'
-    group: 'exouser'
 
