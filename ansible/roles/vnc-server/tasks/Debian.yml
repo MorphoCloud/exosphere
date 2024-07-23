@@ -14,11 +14,21 @@
     repo: '{{ item.repo }}'
     state: present
 
+- name: Stop service apt-daily-upgrade.timer
+  ansible.builtin.systemd_service:
+    name: apt-daily-upgrade.timer
+    state: stopped
+
 - name: 'VNC server packages installed'
   loop: '{{ vncserver_packages }}'
   package:
     name: '{{ item }}'
     state: 'present'
+
+- name: Stop service apt-daily-upgrade.timer
+  ansible.builtin.systemd_service:
+    name: apt-daily-upgrade.timer
+    state: started
 
 - name: "TurboVNC security settings created"
   copy:
