@@ -168,3 +168,24 @@
     XAUTHORITY: /home/exouser/.Xauthority
     DISPLAY: :1.0
   when: 'not panel_configured.stat.exists and gui_enabled is defined and gui_enabled == true'
+
+- name: 'Check if system has at least one GPU'
+  ansible.builtin.command: nvidia-detector
+  register: nvidia_detector_cmd
+
+- name: 'VirtualGL package downloaded'
+  get_url:
+    url: "https://github.com/VirtualGL/virtualgl/releases/download/3.1.1/virtualgl_3.1.1_amd64.deb"
+    dest: "/home/exouser/Downloads/virtualgl_3.1.1_amd64.deb"
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+  when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
+
+- name: 'VirtualGL package installed'
+  command: apt-get install -y /home/exouser/Downloads/virtualgl_3.1.1_amd64.deb
+  when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
+
+- name: 'VirtualGL configured'
+  command: /opt/VirtualGL/bin/vglserver_config +egl +s +f
+  when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
