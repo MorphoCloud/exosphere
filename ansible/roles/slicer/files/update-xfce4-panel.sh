@@ -30,3 +30,6 @@ done
 
 # Execute the generated command
 eval $XFCONF_CMD
+
+# Trigger panel restart
+pkill --signal SIGKILL xfce4-panel
