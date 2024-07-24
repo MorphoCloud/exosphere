@@ -160,7 +160,7 @@
 - name: 'xfce4-panel settings updated'
   become: yes
   become_user: exouser
-  command: |
+  ansible.builtin.script: |
     /home/exouser/.config/xfce4/update-xfce4-panel.sh
     # Create a marker file to indicate that the panel has been configured
     touch /home/exouser/.config/xfce4/panel-configured
