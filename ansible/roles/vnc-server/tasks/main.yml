@@ -11,6 +11,11 @@
       paths:
         - "{{ role_path }}/vars"
 
+- name: Stop service unattended-upgrades
+  ansible.builtin.systemd_service:
+    name: unattended-upgrades
+    state: stopped
+
 - name: Stop service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
     name: apt-daily-upgrade.timer
@@ -22,7 +27,12 @@
     state: 'present'
   loop: '{{ vncserver_packages }}'
 
-- name: Stop service apt-daily-upgrade.timer
+- name: Start service unattended-upgrades
+  ansible.builtin.systemd_service:
+    name: unattended-upgrades
+    state: started
+
+- name: Start service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
     name: apt-daily-upgrade.timer
     state: started
