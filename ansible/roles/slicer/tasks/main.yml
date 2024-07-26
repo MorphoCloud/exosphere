@@ -90,11 +90,21 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
+- name: 'File "slicer-install-extension.py" copied'
+  copy:
+    src: 'slicer-install-extension.py'
+    dest: "{{ install_dir }}/dist/slicer-install-extension.py"
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+
 - name: 'Slicer extensions installed'
   become: yes
   become_user: exouser
-  command: "{{ install_dir }}/dist/slicer-download.sh -d {{ install_dir }}/Slicer -v {{ slicer_release_id }} -e {{ item }}"
+  command: "{{ install_dir }}/Slicer/Slicer --disable-modules --python-script {{ install_dir }}/dist/slicer-install-extension.py {{ item }}"
   loop: '{{ slicer_extensions }}'
+  environment:
+    DISPLAY: :1.0
 
 - name: 'File "husky_small.png" downloaded'
   get_url:
