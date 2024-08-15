@@ -90,6 +90,21 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
+- name: 'File "slicer-update-settings.py" copied'
+  copy:
+    src: 'slicer-update-settings.py'
+    dest: "{{ install_dir }}/dist/slicer-update-settings.py"
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+
+- name: 'Slicer update settings'
+  become: yes
+  become_user: exouser
+  command: "{{ install_dir }}/Slicer/Slicer --disable-modules --python-script {{ install_dir }}/dist/slicer-update-settings.py"
+  environment:
+    DISPLAY: :1.0
+
 - name: 'File "slicer-install-extension.py" copied'
   copy:
     src: 'slicer-install-extension.py'
