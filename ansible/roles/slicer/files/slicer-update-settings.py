@@ -2,7 +2,7 @@ import slicer
 
 
 def updateSettings():
-    slicer.app.defaultScenePath = "/media/volume/My-Data"
+    slicer.app.defaultScenePath = "/media/volume/MyData"
 
 
 if __name__ == "__main__":
