@@ -10,15 +10,42 @@
       paths:
         - "{{ role_path }}/vars"
 
+# See https://linuxconfig.org/disable-automatic-updates-on-ubuntu-22-04-jammy-jellyfish-linux
 - name: Stop service unattended-upgrades
   ansible.builtin.systemd_service:
     name: unattended-upgrades
     state: stopped
 
+- name: Set APT::Periodic::Update-Package-Lists to 0
+  ansible.builtin.lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    regexp: '^APT::Periodic::Update-Package-Lists'
+    line: 'APT::Periodic::Update-Package-Lists "0";'
+    backup: yes
+  become: yes
+
+- name: Set APT::Periodic::Unattended-Upgrade to 0
+  ansible.builtin.lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    regexp: '^APT::Periodic::Unattended-Upgrade'
+    line: 'APT::Periodic::Unattended-Upgrade "0";'
+    backup: yes
+  become: yes
+
 - name: Stop service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
     name: apt-daily-upgrade.timer
     state: stopped
+
+# See https://help.ubuntu.com/community/Upgrades#Upgrade_policy
+- name: Set Prompt to 'never' in /etc/update-manager/release-upgrades
+  ansible.builtin.lineinfile:
+    path: /etc/update-manager/release-upgrades
+    regexp: '^Prompt=.*'
+    line: 'Prompt=never'
+    backup: yes
+    state: present
+  become: yes
 
 - name: 'Slicer prerequisites installed'
   package:
@@ -222,12 +249,3 @@
   command: /opt/VirtualGL/bin/vglserver_config +egl +s +f
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
-- name: Start service apt-daily-upgrade.timer
-  ansible.builtin.systemd_service:
-    name: apt-daily-upgrade.timer
-    state: started
-
-- name: Start service unattended-upgrades
-  ansible.builtin.systemd_service:
-    name: unattended-upgrades
-    state: started
