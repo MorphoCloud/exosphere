@@ -47,6 +47,22 @@
     state: present
   become: yes
 
+- name: Get process IDs of 'check-new-release-gtk'
+  community.general.pids:
+    pattern: "/usr/lib/ubuntu-release-upgrader/check-new-release-gtk"
+  register: release_upgrader_pids
+
+- name: Print the 'check-new-release-gtk' process IDs
+  ansible.builtin.debug:
+    msg: "PIDs of check-new-release-gtk: {{ release_upgrader_pids.pids | join(', ') }}"
+  when: release_upgrader_pids.pids | length > 0
+
+- name: Kill 'check-new-release-gtk' processes
+  ansible.builtin.command:
+    cmd: "kill -s SIGKILL {{ item }}"
+  loop: "{{ release_upgrader_pids.pids }}"
+  when: release_upgrader_pids.pids | length > 0
+
 - name: 'Slicer prerequisites installed'
   package:
     name: '{{ item }}'
