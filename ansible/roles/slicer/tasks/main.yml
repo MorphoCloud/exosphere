@@ -164,6 +164,21 @@
   environment:
     DISPLAY: :1.0
 
+- name: 'File "slicer-install-extension-dependencies.py" copied'
+  copy:
+    src: 'slicer-install-extension-dependencies.py'
+    dest: "{{ install_dir }}/dist/slicer-install-extension-dependencies.py"
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+
+- name: 'Slicer extension dependencies installed'
+  become: yes
+  become_user: exouser
+  command: "{{ install_dir }}/Slicer/Slicer --python-script {{ install_dir }}/dist/slicer-install-extension-dependencies.py"
+  environment:
+    DISPLAY: :1.0
+
 - name: 'File "husky_small.png" downloaded'
   get_url:
     url: "https://raw.githubusercontent.com/SlicerMorph/Images/main/husky_small.png"
