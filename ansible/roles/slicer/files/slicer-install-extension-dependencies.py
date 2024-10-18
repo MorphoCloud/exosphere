@@ -7,7 +7,6 @@ def installModulePythonDependencies():
         "MorphoSourceImport",
     ]:
         slicer.util.selectModule(moduleName)
-        return
 
     # ImageStacks
     slicer.util.pip_install("pynrrd")
