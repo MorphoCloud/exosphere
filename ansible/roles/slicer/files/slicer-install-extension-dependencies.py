@@ -4,9 +4,13 @@ import slicer
 def installModulePythonDependencies():
     for moduleName in [
         "ALPACA",
-        "MorphoSourceImport",
     ]:
         slicer.util.selectModule(moduleName)
+
+    # MorphoSourceImport
+    slicer.util.pip_install("pandas")
+    from MorphoSourceImport import morphosourceVersion
+    slicer.util.pip_install(f"morphosource=={morphosourceVersion}")
 
     # ImageStacks
     slicer.util.pip_install("pynrrd")
