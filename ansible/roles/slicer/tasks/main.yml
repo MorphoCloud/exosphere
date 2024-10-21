@@ -280,3 +280,29 @@
   command: /opt/VirtualGL/bin/vglserver_config +egl +s +f
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
+- name: 'File "check_instance_shelve.sh" copied'
+  copy:
+    src: 'check-instance-shelve.sh'
+    dest: "{{ install_dir }}/dist/check-instance-shelve.sh"
+    mode: "755"
+    owner: "exouser"
+    group: "exouser"
+
+- name: 'Added @reboot crontab entry for checking instance shelving'
+  ansible.builtin.cron:
+    name: "Touch shelving instance tracker file"
+    user: exouser
+    special_time: reboot
+    job: "{{ install_dir }}/dist/check-instance-shelve.sh"
+
+- name: 'Shelving instance tracker file touched'
+  become: yes
+  become_user: exouser
+  command: "{{ install_dir }}/dist/check-instance-shelve.sh"
+
+- name: 'Added crontab for checking for instance shelving extension'
+  cron:
+    name: 'Ask user for instance shelving extension'
+    user: exouser
+    minute: '*/5'
+    job: "{{ install_dir }}/dist/check-instance-shelve.sh -a"
