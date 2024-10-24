@@ -31,6 +31,9 @@ fi
 # Define the path to the shelving instance tracker file, which stores the last extension decision.
 SHEVING_INSTANCE_TRACKER_FILE=/home/exouser/shelving_instance_tracker
 
+ASK='no'
+DISPLAY='no'
+
 # Parse command-line arguments to determine the desired action.
 while getopts "ad" opt; do
   case "$opt" in
@@ -69,11 +72,11 @@ function retrieve_uptime_in_hours() {
 }
 
 # If the -d flag is set, display the elapsed uptime in hours.
-if [[ -n $DISPLAY ]]; then
+if [[ $DISPLAY == 'yes' ]]; then
   retrieve_uptime_in_hours
 
 # If the -a flag is set, prompt the user to extend the runtime if appropriate.
-elif [[ -n $ASK ]]; then
+elif [[ $ASK == 'yes' ]]; then
   # Retrieve the elapsed uptime in hours.
   uptime_hours=$(retrieve_uptime_in_hours)
 
