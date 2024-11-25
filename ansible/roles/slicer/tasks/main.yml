@@ -121,8 +121,8 @@
 - name: 'Exec command in file "Slicer.desktop" updated to use "vglrun -d egl" wrapper'
   ansible.builtin.replace:
     path: "/usr/share/applications/Slicer.desktop"
-    regexp: '\/home\/exouser\/Slicer\/Slicer'
-    replace: 'vglrun -d egl /home/exouser/Slicer/Slicer'
+    regexp: '\/media\/volume\/MyData\/Slicer\/Slicer'
+    replace: 'vglrun -d egl /media/volume/MyData/Slicer/Slicer'
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
 - name: 'File "Slicer.desktop" installed as Desktop launcher'

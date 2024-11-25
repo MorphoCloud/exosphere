@@ -1,8 +1,6 @@
 ---
 
-download_dir: "/home/exouser/Downloads/"
-
-install_dir: "/home/exouser"
+install_dir: "/media/volume/MyData"
 
 slicer_version:
   major: 5
