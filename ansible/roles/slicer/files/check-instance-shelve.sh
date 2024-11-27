@@ -29,7 +29,7 @@ if [[ ! $OSTYPE =~ ^linux ]]; then
 fi
 
 # Define the path to the shelving instance tracker file, which stores the last extension decision.
-SHEVING_INSTANCE_TRACKER_FILE=/home/exouser/shelving_instance_tracker
+SHEVING_INSTANCE_TRACKER_FILE=/opt/instance-config-support/shelving_instance_tracker
 
 ASK='no'
 DISPLAY='no'
