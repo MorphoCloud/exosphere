@@ -11,3 +11,6 @@ slicer_prerequisites_package_names:
   - 'curl'
   - 'jq'
   - 'rsync'
+  # Required by R
+  - 'tcllib'
+  - 'tklib'
