@@ -69,6 +69,13 @@
     state: 'present'
   loop: '{{ slicer_prerequisites_package_names }}'
 
+- name: 'Slicer install directory created'
+  ansible.builtin.file:
+    path: "{{ slicer_install_dir }}"
+    state: directory
+    owner: "exouser"
+    group: "exouser"
+
 - name: 'dist directory created'
   ansible.builtin.file:
     path: "{{ support_install_dir }}/dist"
