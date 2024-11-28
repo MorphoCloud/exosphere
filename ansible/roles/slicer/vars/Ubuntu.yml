@@ -14,3 +14,12 @@ slicer_prerequisites_package_names:
   # Required by R
   - 'tcllib'
   - 'tklib'
+  # Required by R/devtools
+  - 'libfreetype6-dev'
+  - 'libfribidi-dev'
+  - 'libharfbuzz-dev'
+  - 'libjpeg-dev'
+  - 'libjpeg-dev'
+  - 'libpng-dev'
+  - 'libtiff5-dev'
+  - 'libxml2-dev'
