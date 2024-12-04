@@ -5,7 +5,7 @@ desktop_environment_package_names:
   - 'xfce4'
   - 'xfce4-panel'
   - 'ffmpeg'
-  - 'vlc-bin'
+  - 'vlc'
   - 'libxcb-xinerama0'
 
 gdm_custom_conf_location: '/etc/gdm3/custom.conf'
