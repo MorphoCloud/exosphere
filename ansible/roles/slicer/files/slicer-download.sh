@@ -3,35 +3,37 @@
 # This script downloads and extracts Slicer and selected extensions to a target
 # directory. It depends on rsync, curl, and jq.
 #
-# args: [-v release_id] [-e extension] [-d dest] [-s]
+# args: [-r revision] [-e extension] [-d dest] [-s]
 # Installs extensions into slicer at dest. multiple -e arguments are accepted; each
 #   extension will be installed.
 # If -s is present, slicer itself is installed at dest.
-# If -v is not present, assume 4.11.20210226 (current slicer stable)
+# If -r is not present, default to the revision of the latest Slicer release
 
 # Usage:
-# Install slicer to ./stable
-#   slicer-download.sh -v 4.11.20210226 -d stable -s
+# Install slicer 5.6.2 (revison 32448) to ./stable
+#   slicer-download.sh -r 32448 -d stable -s
 
 # Add BoneTextureExtension to that installation
-#   slicer-download.sh -v 4.11.20210226 -d stable -e BoneTextureExtension
+#   slicer-download.sh -r 32448 -d stable -e BoneTextureExtension
 
 # Do both steps at once
-#   slicer-download.sh -v 4.11.20210226 -d stable -s -e BoneTextureExtension
+#   slicer-download.sh -r 32448 -d stable -s -e BoneTextureExtension
 
 set -e
 set -o pipefail
 
+err() { echo -e >&2 ERROR: $@\\n; }
+die() { err $@; exit 1; }
+
 if [[ ! $OSTYPE =~ ^linux ]]; then
-    echo 'slicer-download.sh currently only supports linux installations.'
-    exit
+    die 'slicer-download.sh currently only supports linux installations.'
 fi
 
 declare -a EXTENSIONS
 
-while getopts ":v:e:d:s" opt; do
+while getopts ":r:e:d:s" opt; do
   case "$opt" in
-    v)
+    r)
       REVISION="${OPTARG}"
       ;;
     e)
@@ -57,13 +59,13 @@ PACK_OS="linux"
 PACK_ARCH="amd64"
 
 function release() {
-  # fetch the lowerName of the most-recent release
-  curl -s "$BASE_URL/app/$APP_ID/release?sort=meta.revision&sortdir=-1" | jq -r '.[0].lowerName'
+  # fetch the revision of the most-recent release
+  curl -s "$BASE_URL/app/$APP_ID/release?sort=meta.revision&sortdir=-1" | jq -r '.[0].meta.revision'
 }
 
 function package() {
-  # args: release_id
-  curl -s "$BASE_URL/app/$APP_ID/package?release_id_or_name=$1&os=$PACK_OS&arch=$PACK_ARCH&limit=1" | jq '.[0]'
+  # args: revision
+  curl -s "$BASE_URL/app/$APP_ID/package?revision=$1&os=$PACK_OS&arch=$PACK_ARCH&limit=1" | jq '.[0]'
 }
 
 function extension() {
@@ -84,15 +86,21 @@ function flatten() {
 }
 
 REVISION="${REVISION:-"$(release)"}"
-TARGET="${TARGET:-"Slicer-$REVISION"}"
-
->&2 echo "Installing to $TARGET (version $REVISION): ${INSTALL_SLICER:+"Slicer "}${EXTENSIONS[*]}"
 
 PACK=$(package "$REVISION")
 
 PACK_ID=$(jq -r '._id' <<< "$PACK")
 PACK_REV=$(jq -r '.meta.revision' <<< "$PACK")
+PACK_VERSION=$(jq -r '.meta.version' <<< "$PACK")
 PACK_NAME=$(jq -r '.name' <<< "$PACK")
+
+TARGET="${TARGET:-"Slicer-$PACK_VERSION"}"
+
+if [[ "$REVISION" != "$PACK_REV" ]]; then
+  die "Request revision $REVISION is not available"
+fi
+
+>&2 echo "Installing to $TARGET (revision $REVISION): ${INSTALL_SLICER:+"Slicer "}${EXTENSIONS[*]}"
 
 TEMP=$(mktemp -d)
 
