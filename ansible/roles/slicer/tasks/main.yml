@@ -22,7 +22,7 @@
     regexp: '^APT::Periodic::Update-Package-Lists'
     line: 'APT::Periodic::Update-Package-Lists "0";'
     backup: yes
-  become: yes
+  become: true
 
 - name: Set APT::Periodic::Unattended-Upgrade to 0
   ansible.builtin.lineinfile:
@@ -30,7 +30,7 @@
     regexp: '^APT::Periodic::Unattended-Upgrade'
     line: 'APT::Periodic::Unattended-Upgrade "0";'
     backup: yes
-  become: yes
+  become: true
 
 - name: Stop service apt-daily-upgrade.timer
   ansible.builtin.systemd_service:
@@ -45,7 +45,7 @@
     line: 'Prompt=never'
     backup: yes
     state: present
-  become: yes
+  become: true
 
 - name: Get process IDs of 'check-new-release-gtk'
   community.general.pids:
@@ -100,7 +100,7 @@
     group: "exouser"
 
 - name: 'Slicer application installed'
-  become: yes
+  become: true
   become_user: exouser
   command: "{{ support_install_dir }}/dist/slicer-download.sh -d {{ slicer_install_dir }}/Slicer -v {{ slicer_release_id }} -s"
   args:
@@ -156,7 +156,7 @@
     group: "exouser"
 
 - name: 'Slicer update settings'
-  become: yes
+  become: true
   become_user: exouser
   command: "{{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-update-settings.py"
   environment:
@@ -171,7 +171,7 @@
     group: "exouser"
 
 - name: 'Slicer extensions installed'
-  become: yes
+  become: true
   become_user: exouser
   command: "{{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }}"
   loop: '{{ slicer_extensions }}'
@@ -187,7 +187,7 @@
     group: "exouser"
 
 - name: 'Slicer extension dependencies installed'
-  become: yes
+  become: true
   become_user: exouser
   command: "{{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
   environment:
@@ -204,7 +204,7 @@
 
 # See https://github.com/jamescherti/watch-xfce-xfconf
 - name: 'Theme name updated to "Yaru-magenta"'
-  become: yes
+  become: true
   become_user: exouser
   xfconf:
     channel: "xsettings"
@@ -216,7 +216,7 @@
     DISPLAY: :1.0
 
 - name: 'Icon theme name updated to "Yaru-magenta"'
-  become: yes
+  become: true
   become_user: exouser
   xfconf:
     channel: "xsettings"
@@ -228,7 +228,7 @@
     DISPLAY: :1.0
 
 - name: 'Desktop background updated'
-  become: yes
+  become: true
   become_user: exouser
   xfconf:
     channel: "xfce4-desktop"
@@ -240,7 +240,7 @@
     DISPLAY: :1.0
 
 - name: 'Desktop background centered'
-  become: yes
+  become: true
   become_user: exouser
   xfconf:
     channel: "xfce4-desktop"
@@ -266,7 +266,7 @@
   when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'xfce4-panel settings updated'
-  become: yes
+  become: true
   become_user: exouser
   ansible.builtin.script: |
     /home/exouser/.config/xfce4/update-xfce4-panel.sh
@@ -312,7 +312,7 @@
     job: "{{ support_install_dir }}/dist/check-instance-shelve.sh"
 
 - name: 'Shelving instance tracker file touched'
-  become: yes
+  become: true
   become_user: exouser
   command: "{{ support_install_dir }}/dist/check-instance-shelve.sh"
 
