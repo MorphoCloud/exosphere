@@ -102,7 +102,7 @@
 - name: 'Slicer application installed'
   become: true
   become_user: exouser
-  command: "{{ support_install_dir }}/dist/slicer-download.sh -d {{ slicer_install_dir }}/Slicer -v {{ slicer_release_id }} -s"
+  command: "{{ support_install_dir }}/dist/slicer-download.sh -d {{ slicer_install_dir }}/Slicer -r {{ slicer_release_id }} -s"
   args:
     creates: "{{ slicer_install_dir }}/Slicer"
 
