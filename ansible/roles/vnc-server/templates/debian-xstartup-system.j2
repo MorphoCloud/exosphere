@@ -6,6 +6,7 @@ test x"$1"     = x"" && set -- default
 vncconfig -iconic &
 "$SHELL" -l << EOF
 export XDG_SESSION_TYPE=x11
+/etc/vnc/xrandr-add-modes.sh
 dbus-launch --exit-with-session startxfce4
 EOF
 vncserver -kill $DISPLAY
