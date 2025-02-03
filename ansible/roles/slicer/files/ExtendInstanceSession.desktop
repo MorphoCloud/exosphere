@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Extend Instance Session
+Comment=
+Exec=bash -ic 'SUPPORT_INSTALL_DIR/dist/check-instance-shelve.sh -t'
+Icon=
+Path=
+Terminal=false
+StartupNotify=false
