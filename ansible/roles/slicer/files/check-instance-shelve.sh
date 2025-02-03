@@ -29,7 +29,7 @@ if [[ ! $OSTYPE =~ ^linux ]]; then
 fi
 
 # Define the path to the shelving instance tracker file, which stores the last extension decision.
-SHEVING_INSTANCE_TRACKER_FILE=/opt/instance-config-support/shelving_instance_tracker
+SHELVING_INSTANCE_TRACKER_FILE=/opt/instance-config-support/shelving_instance_tracker
 
 ASK='no'
 DISPLAY='no'
@@ -53,13 +53,13 @@ done
 # Function to retrieve the time elapsed (in hours) since the shelving tracker file was last modified.
 function retrieve_uptime_in_hours() {
   # Verify that the shelving tracker file exists.
-  if [[ ! -f $SHEVING_INSTANCE_TRACKER_FILE ]]; then
-    >&2 echo "Shelving tracker file not found: $SHEVING_INSTANCE_TRACKER_FILE"
+  if [[ ! -f $SHELVING_INSTANCE_TRACKER_FILE ]]; then
+    >&2 echo "Shelving tracker file not found: $SHELVING_INSTANCE_TRACKER_FILE"
     exit 1
   fi
 
   # Get the last-modified time of the tracker file in seconds since epoch.
-  uptime_seconds=$(date -r $SHEVING_INSTANCE_TRACKER_FILE +%s)
+  uptime_seconds=$(date -r $SHELVING_INSTANCE_TRACKER_FILE +%s)
 
   # Get the current time in seconds since epoch.
   current_time_seconds=$(date +%s)
@@ -94,8 +94,8 @@ elif [[ $ASK == 'yes' ]]; then
       0)
         # User selected "Yes" to extend the runtime by 4 hours.
         # Update the tracker file's timestamp to 30 minutes from now, aligning with the upcoming shelving schedule.
-        >&2 echo "Updating last-modified time for $SHEVING_INSTANCE_TRACKER_FILE to NOW + 30 minutes"
-        touch -d "$(date -d '+30 minutes')" $SHEVING_INSTANCE_TRACKER_FILE
+        >&2 echo "Updating last-modified time for $SHELVING_INSTANCE_TRACKER_FILE to NOW + 30 minutes"
+        touch -d "$(date -d '+30 minutes')" $SHELVING_INSTANCE_TRACKER_FILE
         ;;
       1)
         # User selected "No," allowing the instance to be shelved as scheduled.
@@ -115,6 +115,6 @@ elif [[ $ASK == 'yes' ]]; then
 
 # If no flags are set, update the shelving tracker file's timestamp to the current time.
 else
-  >&2 echo "Updating last-modified time for $SHEVING_INSTANCE_TRACKER_FILE to NOW"
-  touch $SHEVING_INSTANCE_TRACKER_FILE
+  >&2 echo "Updating last-modified time for $SHELVING_INSTANCE_TRACKER_FILE to NOW"
+  touch $SHELVING_INSTANCE_TRACKER_FILE
 fi
