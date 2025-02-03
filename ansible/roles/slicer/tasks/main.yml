@@ -322,3 +322,19 @@
     user: exouser
     minute: '*/5'
     job: "{{ support_install_dir }}/dist/check-instance-shelve.sh -a"
+
+- name: 'File "ExtendInstanceSession.desktop" installed as Desktop launcher'
+  copy:
+    src: 'ExtendInstanceSession.desktop'
+    dest: '/home/exouser/Desktop/ExtendInstanceSession.desktop'
+    mode: "755"
+    owner: "exouser"
+    group: "exouser"
+  when: 'gui_enabled is defined and gui_enabled == true'
+
+- name: 'Placeholder "SUPPORT_INSTALL_DIR" updated in file "ExtendInstanceSession.desktop"'
+  ansible.builtin.replace:
+    path: "/home/exouser/Desktop/ExtendInstanceSession.desktop"
+    regexp: 'SUPPORT\_INSTALL\_DIR'
+    replace: '{{ support_install_dir }}'
+  when: 'gui_enabled is defined and gui_enabled == true'
