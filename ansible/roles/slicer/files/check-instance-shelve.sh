@@ -3,13 +3,15 @@
 # This script manages the automatic shelving mechanism for a running instance on a Linux system.
 # It can either ask the user if they want to extend the instance runtime by 4 hours, 
 # display the time elapsed since the last modification of the shelving tracker file, 
-# or update the tracker file's timestamp to the current time if no arguments are provided.
+# update the tracker file's timestamp to the current time if no arguments are provided,
+# or notify the user that the tracker file will be updated now.
 #
 # Arguments:
 #   -a : Displays a dialog using the "zenity" program, asking the user whether to extend the instance runtime 
 #        for an additional 4 hours. This option is only triggered if the elapsed time since the last modification 
 #        is between 3.5 and 4.0 hours.
 #   -d : Displays the number of hours that have passed since the shelving tracker file was last modified.
+#   -t : Displays a notification that the tracker file will be updated now and then updates it.
 #
 # Behavior when no arguments are provided:
 #   If no arguments are specified, the script updates the shelving tracker file's timestamp to the current time,
@@ -39,15 +41,19 @@ SHELVING_INSTANCE_TRACKER_FILE=/opt/instance-config-support/shelving_instance_tr
 
 ASK='no'
 DISPLAY='no'
+NOTIFY_AND_UPDATE='no'
 
 # Parse command-line arguments to determine the desired action.
-while getopts "ad" opt; do
+while getopts "adt" opt; do
   case "$opt" in
     a)
       ASK='yes'  # Flag for prompting the user to extend runtime.
       ;;
     d)
       DISPLAY='yes'  # Flag for displaying the number of hours since the last modification.
+      ;;
+    t)
+      NOTIFY_AND_UPDATE='yes'  # Flag for displaying a notification before extending the runtime.
       ;;
     \?)
       >&2 echo "Unrecognized option: -$OPTARG"
@@ -118,6 +124,17 @@ elif [[ $ASK == 'yes' ]]; then
   else
     >&2 echo "Skip asking as uptime is not between 3.5 and 4 hours"
   fi
+
+# If the -t flag is set, notify the user and update the tracker file.
+elif [[ $NOTIFY_AND_UPDATE == 'yes' ]]; then
+  export DISPLAY=:1 && \
+    zenity \
+    --info \
+    --title="Automatic Instance Shelving" \
+    --text="The instance runtime will be extended for 4 more hours starting now." \
+    --ok-label="OK"
+  >&2 echo "Updating last-modified time for $SHELVING_INSTANCE_TRACKER_FILE to NOW"
+  touch $SHELVING_INSTANCE_TRACKER_FILE
 
 # If no flags are set, update the shelving tracker file's timestamp to the current time.
 else
