@@ -23,6 +23,12 @@
 set -e
 set -o pipefail
 
+# Ensure zenity is installed
+if ! command -v zenity &> /dev/null; then
+    >&2 echo "Error: 'zenity' is required but not installed. Please install it to use this script."
+    exit 1
+fi
+
 if [[ ! $OSTYPE =~ ^linux ]]; then
     echo 'check-instance-shelve.sh currently only supports Linux systems.'
     exit
