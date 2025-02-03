@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 if [[ ! $OSTYPE =~ ^linux ]]; then
-    echo 'check-instannce-shelve.sh currently only supports Linux system.'
+    echo 'check-instance-shelve.sh currently only supports Linux systems.'
     exit
 fi
 
@@ -89,7 +89,7 @@ elif [[ $ASK == 'yes' ]]; then
       --question \
       --timeout=300 \
       --title="Automatic Instance Shelving" \
-      --text="Instance will be shelved in ~30 minutes.\n\nWould you like to keep the instance running for an additinal 4 hours?" --ok-label="Yes" --cancel-label="No"
+      --text="Instance will be shelved in ~30 minutes.\n\nWould you like to keep the instance running for an additional 4 hours?" --ok-label="Yes" --cancel-label="No"
     case $? in
       0)
         # User selected "Yes" to extend the runtime by 4 hours.
