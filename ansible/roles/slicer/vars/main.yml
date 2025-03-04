@@ -15,3 +15,7 @@ slicer_release_id: "33216"
 slicer_extensions:
   - SlicerMorph
   - SurfaceWrapSolidify
+  - PyTorch
+  - MEMOS
+  - Photogrammetry
+  
