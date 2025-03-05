@@ -7,10 +7,10 @@ slicer_install_dir: "/media/volume/MyData"
 slicer_version:
   major: 5
   minor: 8
-  patch: 0
+  patch: 1
 
 # slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
-slicer_release_id: "33216"
+slicer_release_id: "33241"
 
 slicer_extensions:
   - SlicerMorph
