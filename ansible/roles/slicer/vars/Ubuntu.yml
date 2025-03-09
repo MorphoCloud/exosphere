@@ -23,6 +23,9 @@ slicer_prerequisites_package_names:
   - 'libpng-dev'
   - 'libtiff5-dev'
   - 'libxml2-dev'
+  - 'libgl1-mesa-dev'
+  - 'libglu1-mesa-dev'
+
   # NVIDIA
   # When using the "g3.xl" flavor, vGPU support is no longer needed. Therefore, we replace the default
   # "nvidia-linux-grid-535" driver with the more reliable "nvidia-driver-550-server-open".
