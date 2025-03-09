@@ -279,15 +279,17 @@
 
 - name: 'VirtualGL package downloaded'
   get_url:
-    url: "https://github.com/VirtualGL/virtualgl/releases/download/3.1.1/virtualgl_3.1.1_amd64.deb"
-    dest: "/home/exouser/Downloads/virtualgl_3.1.1_amd64.deb"
+    # url: "https://github.com/VirtualGL/virtualgl/releases/download/3.1.1/virtualgl_3.1.1_amd64.deb"
+    # temporary location until this patch is merged into a release. We need it for -nodl option to work correctly with Slicer.
+    url: "https://s3.amazonaws.com/virtualgl-pr/main/linux/virtualgl_3.1.3_amd64.deb"
+    dest: "/home/exouser/Downloads/virtualgl_3.1.3_amd64.deb"
     mode: "644"
     owner: "exouser"
     group: "exouser"
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
 - name: 'VirtualGL package installed'
-  command: apt-get install -y /home/exouser/Downloads/virtualgl_3.1.1_amd64.deb
+  command: apt-get install -y /home/exouser/Downloads/virtualgl_3.1.3_amd64.deb
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
 - name: 'VirtualGL configured'
