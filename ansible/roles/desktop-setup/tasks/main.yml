@@ -37,12 +37,6 @@
     name: apt-daily-upgrade.timer
     state: started
 
-- name: 'xfce4-web-browser icon updated'
-  ansible.builtin.lineinfile:
-    path: /usr/share/applications/xfce4-web-browser.desktop
-    regexp: '^Icon='
-    line: Icon=firefox
-
 # https://askubuntu.com/questions/1048774/disabling-lock-screen-18-04
 # https://people.gnome.org/~pmkovar/system-admin-guide/screen-locking.html
 # https://askubuntu.com/questions/967842/how-to-remove-phone-style-gnome-swipe-to-unlock/1159085#1159085
