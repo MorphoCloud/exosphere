@@ -234,20 +234,6 @@
         xpath: //property[@name="last-image"]
   when: 'gui_enabled is defined and gui_enabled == true'
 
-- name: Update Xfce4 settings ThemeName
-  community.general.xml:
-    attribute: value
-    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
-    value: Yaru-magenta
-    xpath: //property[@name="ThemeName"]
-
-- name: Update Xfce4 settings IconThemeName
-  community.general.xml:
-    attribute: value
-    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
-    value: Yaru-magenta
-    xpath: //property[@name="IconThemeName"]
-
 # Adapted from https://github.com/cli/cli/blob/trunk/docs/install_linux.md#debian-ubuntu-linux-raspberry-pi-os-apt
 - name: 'GitHub Client GPG key added'
   get_url:
