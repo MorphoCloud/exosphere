@@ -7,7 +7,6 @@ vncconfig -iconic &
 "$SHELL" -l << EOF
 export XDG_SESSION_TYPE=x11
 export GNOME_SHELL_SESSION_MODE=ubuntu
-/etc/vnc/xrandr-add-modes.sh
 dbus-launch --exit-with-session startxfce4 --session=ubuntu
 EOF
 vncserver -kill $DISPLAY
