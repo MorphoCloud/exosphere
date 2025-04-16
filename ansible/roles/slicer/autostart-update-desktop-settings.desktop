@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Terminal=true
+Name=Update Desktop Settings
+# Update Gnome Shell settings to show mounted volumes
+# Allow "Slicer.desktop" to be executed
+# Allow "ExtendInstanceSession.desktop" to be executed
+Exec=sh -c 'dconf write /org/gnome/shell/extensions/dash-to-dock/show-mounts true && gio set /home/exouser/Desktop/Slicer.desktop metadata::trusted true && gio set /home/exouser/Desktop/ExtendInstanceSession.desktop metadata::trusted true'
+Icon=
+Comment=These commands are executed automatically on login
