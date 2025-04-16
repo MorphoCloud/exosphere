@@ -104,6 +104,7 @@
   copy:
     src: 'Slicer.desktop'
     dest: '/usr/share/applications/Slicer.desktop'
+    mode: "755"
     owner: "exouser"
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
@@ -137,6 +138,7 @@
   copy:
     src: '/usr/share/applications/Slicer.desktop'
     dest: '/home/exouser/Desktop/Slicer.desktop'
+    mode: "755"
     owner: "exouser"
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
@@ -247,4 +249,20 @@
     path: "/home/exouser/Desktop/ExtendInstanceSession.desktop"
     regexp: 'SUPPORT\_INSTALL\_DIR'
     replace: '{{ support_install_dir }}'
+  when: 'gui_enabled is defined and gui_enabled == true'
+
+- name: '/home/exouser/.config/autostart directory created'
+  ansible.builtin.file:
+    path: "/home/exouser/.config/autostart"
+    state: directory
+    owner: "exouser"
+    group: "exouser"
+
+- name: 'File "update-desktop-settings.desktop" installed as startup application'
+  copy:
+    src: 'autostart-update-desktop-settings.desktop'
+    dest: '/home/exouser/.config/autostart/update-desktop-settings.desktop'
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
