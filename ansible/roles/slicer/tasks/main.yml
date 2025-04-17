@@ -10,12 +10,6 @@
       paths:
         - "{{ role_path }}/vars"
 
-# See https://linuxconfig.org/disable-automatic-updates-on-ubuntu-22-04-jammy-jellyfish-linux
-- name: Stop service unattended-upgrades
-  ansible.builtin.systemd_service:
-    name: unattended-upgrades
-    state: stopped
-
 - name: Set APT::Periodic::Update-Package-Lists to 0
   ansible.builtin.lineinfile:
     path: /etc/apt/apt.conf.d/20auto-upgrades
@@ -31,11 +25,6 @@
     line: 'APT::Periodic::Unattended-Upgrade "0";'
     backup: yes
   become: true
-
-- name: Stop service apt-daily-upgrade.timer
-  ansible.builtin.systemd_service:
-    name: apt-daily-upgrade.timer
-    state: stopped
 
 # See https://help.ubuntu.com/community/Upgrades#Upgrade_policy
 - name: Set Prompt to 'never' in /etc/update-manager/release-upgrades
@@ -64,9 +53,14 @@
   when: release_upgrader_pids.pids | length > 0
 
 - name: 'Slicer prerequisites installed'
-  package:
+  apt:
     name: '{{ item }}'
     state: 'present'
+  # This stuff waits for APT/dpkg lock if unattended upgrades are running
+  register: 'apt_status'
+  until: 'apt_status is success'
+  delay: 10
+  retries: 60
   loop: '{{ slicer_prerequisites_package_names }}'
 
 - name: 'Slicer install directory created'

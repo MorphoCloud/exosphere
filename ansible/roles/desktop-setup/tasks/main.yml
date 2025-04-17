@@ -11,31 +11,11 @@
       paths:
         - "{{ role_path }}/vars"
 
-- name: Stop service unattended-upgrades
-  ansible.builtin.systemd_service:
-    name: unattended-upgrades
-    state: stopped
-
-- name: Stop service apt-daily-upgrade.timer
-  ansible.builtin.systemd_service:
-    name: apt-daily-upgrade.timer
-    state: stopped
-
 - name: 'graphical environment installed'
   package:
     name: '{{ item }}'
     state: 'present'
   loop: '{{ desktop_environment_package_names }}'
-
-- name: Start service unattended-upgrades
-  ansible.builtin.systemd_service:
-    name: unattended-upgrades
-    state: started
-
-- name: Start service apt-daily-upgrade.timer
-  ansible.builtin.systemd_service:
-    name: apt-daily-upgrade.timer
-    state: started
 
 # https://askubuntu.com/questions/1048774/disabling-lock-screen-18-04
 # https://people.gnome.org/~pmkovar/system-admin-guide/screen-locking.html
