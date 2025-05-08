@@ -9,6 +9,8 @@ slicer_version:
   minor: 9
   patch: 0
 
+slicer_python_version: 3.9
+
 # slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
 slicer_release_id: "33573"
 
