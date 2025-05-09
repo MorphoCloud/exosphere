@@ -141,7 +141,7 @@
   ansible.builtin.replace:
     path: "/usr/share/applications/Slicer.desktop"
     regexp: 'SLICER\_INSTALL\_DIR\/Slicer\/Slicer'
-    replace: 'vglrun -d egl -ld SLICER_INSTALL_DIR/lib/Python/lib/python{{ slicer_python_version }}/site-packages/nvidia/cudnn/lib SLICER_INSTALL_DIR/Slicer/Slicer'
+    replace: 'vglrun -d egl -ld SLICER_INSTALL_DIR/Slicer/lib/Python/lib/python{{ slicer_python_version }}/site-packages/nvidia/cudnn/lib SLICER_INSTALL_DIR/Slicer/Slicer'
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
 - name: 'Placeholder "SLICER_INSTALL_DIR" updated in file "Slicer.desktop"'
