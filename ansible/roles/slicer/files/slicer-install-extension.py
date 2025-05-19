@@ -12,10 +12,15 @@ def installExtension(extensionName):
         raise ValueError(f"Failed to install {extensionName} extension")
 
 
+def bookmarkExtension(extensionName):
+    em = slicer.app.extensionsManagerModel()
+    em.setExtensionBookmarked(extensionName, True)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('extension', help='Name of the extension (and its dependencies) to install')
     args = parser.parse_args()
     installExtension(args.extension)
+    bookmarkExtension(args.extension)
     slicer.util.exit()
-
