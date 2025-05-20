@@ -67,7 +67,7 @@ type alias ExoServerVersion =
 
 currentExoServerVersion : ExoServerVersion
 currentExoServerVersion =
-    5
+    6
 
 
 type ExoFeature
