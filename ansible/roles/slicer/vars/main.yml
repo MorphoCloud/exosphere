@@ -18,7 +18,5 @@ slicer_extensions:
   - PyTorch
   - MEMOS
   - Photogrammetry
-  - DenseCorrespondenceAnalysis
-  - Sandbox
   - MorphoDepot
   
