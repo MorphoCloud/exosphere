@@ -9,6 +9,7 @@ def installModulePythonDependencies():
 
     # MorphoSourceImport
     slicer.util.pip_install("pandas")
+    slicer.util.pip_install("contourpy==1.3.2")
     from MorphoSourceImport import morphosourceVersion
     slicer.util.pip_install(f"morphosource=={morphosourceVersion}")
 
@@ -20,6 +21,7 @@ def installModulePythonDependencies():
 
     # "GPA":
     slicer.util.pip_install("pandas")
+    
 
 
 if __name__ == "__main__":
