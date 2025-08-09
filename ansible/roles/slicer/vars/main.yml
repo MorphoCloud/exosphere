@@ -23,4 +23,4 @@ slicer_extensions:
   - PyTorch
   - Photogrammetry
   - MorphoDepot
-  - SlicerNNInteractive  
+  - NNInteractive  
