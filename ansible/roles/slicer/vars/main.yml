@@ -15,13 +15,12 @@ slicer_python_version: 3.9
 # package in "ansible/roles/slicer/files/slicer-install-extension-dependencies.py".
 
 # slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
-slicer_release_id: "33687"
+slicer_release_id: "33836"
 
 slicer_extensions:
   - SlicerMorph
   - SurfaceWrapSolidify
   - PyTorch
-  - MEMOS
   - Photogrammetry
   - MorphoDepot
-  
+  - SlicerNNInteractive  
