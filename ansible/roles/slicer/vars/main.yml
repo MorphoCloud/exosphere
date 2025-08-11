@@ -9,7 +9,7 @@ slicer_version:
   minor: 9
   patch: 0
 
-slicer_python_version: 3.9
+slicer_python_version: 3.12
 
 # When updating the Slicer revision to >= 33807, make sure to remove the pinning of the "contourpy"
 # package in "ansible/roles/slicer/files/slicer-install-extension-dependencies.py".
@@ -24,3 +24,4 @@ slicer_extensions:
   - Photogrammetry
   - MorphoDepot
   - NNInteractive  
+  - DenseCorrespondenceAnalysis
