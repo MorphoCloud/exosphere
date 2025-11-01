@@ -15,7 +15,7 @@ slicer_python_version: 3.12
 # package in "ansible/roles/slicer/files/slicer-install-extension-dependencies.py".
 
 # slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
-slicer_release_id: "33836"
+slicer_release_id: "34021"
 
 slicer_extensions:
   - SlicerMorph
@@ -25,3 +25,4 @@ slicer_extensions:
   - MorphoDepot
   - NNInteractive  
   - DenseCorrespondenceAnalysis
+  - SurfaceMarkup
