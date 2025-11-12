@@ -2,7 +2,6 @@
 
 desktop_environment_package_names:
   - 'ubuntu-desktop-minimal'
-  - 'ffmpeg'
   - 'vlc'
   - 'libxcb-xinerama0'
 
