@@ -17,22 +17,22 @@
     state: 'present'
   loop: '{{ desktop_environment_package_names }}'
 
- - name: 'Ensure apt ffmpeg package is not installed'
-   apt:
-     name: ffmpeg
-     state: absent
-   become: true
+- name: 'Ensure apt ffmpeg package is not installed'
+  apt:
+    name: ffmpeg
+    state: absent
+  become: true
 
- - name: 'Download ffmpeg static binary (x64)'
-   get_url:
-     url: 'https://github.com/eugeneware/ffmpeg-static/releases/download/b6.0/ffmpeg-linux-x64'
-     dest: '/usr/local/bin/ffmpeg'
-     owner: 'root'
-     group: 'root'
-     mode: '0755'
-     force: yes
-   when: ansible_architecture == 'x86_64'
-   become: true
+- name: 'Download ffmpeg static binary (x64)'
+  get_url:
+    url: 'https://github.com/eugeneware/ffmpeg-static/releases/download/b6.0/ffmpeg-linux-x64'
+    dest: '/usr/local/bin/ffmpeg'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    force: yes
+  when: ansible_architecture == 'x86_64'
+  become: true
 
 # https://askubuntu.com/questions/1048774/disabling-lock-screen-18-04
 # https://people.gnome.org/~pmkovar/system-admin-guide/screen-locking.html
