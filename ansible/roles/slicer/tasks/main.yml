@@ -222,7 +222,7 @@
 
 - name: 'GitHub Client package installed'
   apt:
-    name: 'gh=2.88.1'
+    name: 'gh'
     state: 'present'
 
 - name: 'File "check_instance_shelve.sh" copied'
