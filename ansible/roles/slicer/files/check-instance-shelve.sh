@@ -99,7 +99,7 @@ elif [[ $ASK == 'yes' ]]; then
     export DISPLAY=:1 && \
       zenity \
       --question \
-      --timeout=300 \
+      --timeout=900 \
       --title="Automatic Instance Shelving" \
       --text="Instance will be shelved in ~30 minutes.\n\nWould you like to keep the instance running for an additional 4 hours?" --ok-label="Yes" --cancel-label="No"
     case $? in
