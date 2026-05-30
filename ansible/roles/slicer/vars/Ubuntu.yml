@@ -4,9 +4,8 @@ slicer_prerequisites_package_names:
   - 'libglu1-mesa'
   - 'libpulse-mainloop-glib0'
   - 'libnss3'
-  - 'libasound2'
+  - 'libasound2t64'
   - 'qt5dxcb-plugin'
-  - 'libsm6'
   # Required by "slicer-download.sh"
   - 'curl'
   - 'jq'
@@ -18,7 +17,6 @@ slicer_prerequisites_package_names:
   - 'libfreetype6-dev'
   - 'libfribidi-dev'
   - 'libharfbuzz-dev'
-  - 'libjpeg-dev'
   - 'libjpeg-dev'
   - 'libpng-dev'
   - 'libtiff5-dev'
