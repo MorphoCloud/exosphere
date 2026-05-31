@@ -13,9 +13,8 @@
 
 - name: 'graphical environment installed'
   package:
-    name: '{{ item }}'
+    name: '{{ desktop_environment_package_names }}'
     state: 'present'
-  loop: '{{ desktop_environment_package_names }}'
 
 - name: 'Ensure apt ffmpeg package is not installed'
   apt:
