@@ -18,6 +18,11 @@
   package:
     name: '{{ vncserver_packages }}'
     state: 'present'
+  # This stuff waits for APT/dpkg lock if unattended upgrades are running
+  register: 'apt_status'
+  until: 'apt_status is success'
+  delay: 10
+  retries: 60
 
 - name: "TurboVNC security settings created"
   copy:
