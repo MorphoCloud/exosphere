@@ -62,23 +62,6 @@
   delay: 10
   retries: 60
 
-# NVIDIA
-# When using the "g3.xl" flavor, vGPU support is no longer needed. Therefore, we replace the default
-# "nvidia-linux-grid-535" driver with the more reliable "nvidia-driver-550-server-open".
-#
-# For additional context, refer to:
-# https://github.com/MorphoCloud/MorphoCloudWorkflow/issues/66
-- name: 'Update NVIDIA driver'
-  apt:
-    name: 'nvidia-driver-550-server-open'
-    state: 'present'
-  # This stuff waits for APT/dpkg lock if unattended upgrades are running
-  register: 'apt_status'
-  until: 'apt_status is success'
-  delay: 10
-  retries: 60
-  when: 'instance_flavor is defined and instance_flavor == "g3.xl"'
-
 - name: 'Slicer install directory created'
   ansible.builtin.file:
     path: "{{ slicer_install_dir }}"
