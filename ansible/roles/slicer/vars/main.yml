@@ -19,6 +19,7 @@ slicer_release_id: "34045"
 
 slicer_extensions:
   - SlicerMorph
+  - SlicerHeart
   - SurfaceWrapSolidify
   - PyTorch
   - Photogrammetry
