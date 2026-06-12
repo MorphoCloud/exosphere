@@ -209,6 +209,12 @@
     owner: "exouser"
     group: "exouser"
 
+- name: 'Session timeout written for the shelving scripts'
+  copy:
+    content: "{{ session_timeout_hrs | default(4) }}"
+    dest: "{{ support_install_dir }}/session_timeout_hrs"
+    mode: "0644"
+
 - name: 'Added @reboot crontab entry for checking instance shelving'
   ansible.builtin.cron:
     name: "Touch shelving instance tracker file"

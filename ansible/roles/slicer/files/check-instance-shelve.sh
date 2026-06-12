@@ -39,6 +39,16 @@ fi
 # Define the path to the shelving instance tracker file, which stores the last extension decision.
 SHELVING_INSTANCE_TRACKER_FILE=/opt/instance-config-support/shelving_instance_tracker
 
+# Session timeout in hours. Written at boot by ansible from the
+# session_timeout_hrs extra-var (which the create workflow derives from the
+# issue's timeout:<N>hrs label); falls back to the historical 4 hours.
+SESSION_TIMEOUT_FILE=/opt/instance-config-support/session_timeout_hrs
+TIMEOUT_HRS=$(cat "$SESSION_TIMEOUT_FILE" 2>/dev/null || echo 4)
+if ! [[ "$TIMEOUT_HRS" =~ ^[0-9]+$ ]]; then
+  TIMEOUT_HRS=4
+fi
+ASK_WINDOW_START=$(echo "$TIMEOUT_HRS - 0.5" | bc)
+
 ASK='no'
 DISPLAY='no'
 NOTIFY_AND_UPDATE='no'
@@ -92,8 +102,8 @@ elif [[ $ASK == 'yes' ]]; then
   # Retrieve the elapsed uptime in hours.
   uptime_hours=$(retrieve_uptime_in_hours)
 
-  # Check if uptime is between 3.5 and 4.0 hours.
-  if python3 -c "exit(0 if (3.5 <= $uptime_hours <= 4.0) else 1)"; then
+  # Check if uptime is inside the warning window (timeout minus 30 minutes).
+  if python3 -c "exit(0 if ($ASK_WINDOW_START <= $uptime_hours <= $TIMEOUT_HRS) else 1)"; then
 
     # Use "zenity" to ask the user whether to extend the runtime.
     export DISPLAY=:1 && \
@@ -101,10 +111,10 @@ elif [[ $ASK == 'yes' ]]; then
       --question \
       --timeout=900 \
       --title="Automatic Instance Shelving" \
-      --text="Instance will be shelved in ~30 minutes.\n\nWould you like to keep the instance running for an additional 4 hours?" --ok-label="Yes" --cancel-label="No"
+      --text="Instance will be shelved in ~30 minutes.\n\nWould you like to keep the instance running for an additional $TIMEOUT_HRS hours?" --ok-label="Yes" --cancel-label="No"
     case $? in
       0)
-        # User selected "Yes" to extend the runtime by 4 hours.
+        # User selected "Yes" to extend the runtime by another session window.
         # Update the tracker file's timestamp to 30 minutes from now, aligning with the upcoming shelving schedule.
         >&2 echo "Updating last-modified time for $SHELVING_INSTANCE_TRACKER_FILE to NOW + 30 minutes"
         touch -d "$(date -d '+30 minutes')" $SHELVING_INSTANCE_TRACKER_FILE
@@ -122,7 +132,7 @@ elif [[ $ASK == 'yes' ]]; then
         ;;
     esac
   else
-    >&2 echo "Skip asking as uptime is not between 3.5 and 4 hours"
+    >&2 echo "Skip asking as uptime is not between $ASK_WINDOW_START and $TIMEOUT_HRS hours"
   fi
 
 # If the -t flag is set, notify the user and update the tracker file.
@@ -131,7 +141,7 @@ elif [[ $NOTIFY_AND_UPDATE == 'yes' ]]; then
     zenity \
     --info \
     --title="Automatic Instance Shelving" \
-    --text="The instance runtime will be extended for 4 more hours starting now." \
+    --text="The instance runtime will be extended for $TIMEOUT_HRS more hours starting now." \
     --ok-label="OK"
   >&2 echo "Updating last-modified time for $SHELVING_INSTANCE_TRACKER_FILE to NOW"
   touch $SHELVING_INSTANCE_TRACKER_FILE
