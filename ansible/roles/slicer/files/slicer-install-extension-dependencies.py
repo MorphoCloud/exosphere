@@ -9,9 +9,6 @@ def installModulePythonDependencies():
 
     # MorphoSourceImport
     slicer.util.pip_install("pandas")
-    # Pin contourpy version to 1.3.2 to ensure compatibility with manylinux_2_17
-    # wheels required for Slicer Preview versions older than July 22, 2025 (revision 33807).
-    slicer.util.pip_install("contourpy==1.3.2")
     from MorphoSourceImport import morphosourceVersion
     slicer.util.pip_install(f"morphosource=={morphosourceVersion}")
 

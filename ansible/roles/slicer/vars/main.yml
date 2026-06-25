@@ -6,16 +6,13 @@ slicer_install_dir: "/media/volume/MyData"
 
 slicer_version:
   major: 5
-  minor: 10
+  minor: 12
   patch: 0
 
 slicer_python_version: 3.12
 
-# When updating the Slicer revision to >= 33807, make sure to remove the pinning of the "contourpy"
-# package in "ansible/roles/slicer/files/slicer-install-extension-dependencies.py".
-
 # slicer_release_id: "{{ slicer_version['major'] }}.{{ slicer_version['minor'] }}.{{ slicer_version['patch'] }}"
-slicer_release_id: "34045"
+slicer_release_id: "34621"
 
 slicer_extensions:
   - SlicerMorph

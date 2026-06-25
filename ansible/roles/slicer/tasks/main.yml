@@ -108,13 +108,6 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
-- name: 'Placeholder "Slicer-X.Y" updated in file "Slicer.desktop"'
-  ansible.builtin.replace:
-    path: "/usr/share/applications/Slicer.desktop"
-    regexp: 'Slicer\-X\.Y'
-    replace: 'Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}'
-  when: 'gui_enabled is defined and gui_enabled == true'
-
 - name: 'Check if system has at least one GPU'
   ansible.builtin.command: nvidia-detector
   register: nvidia_detector_cmd
