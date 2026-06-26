@@ -15,8 +15,6 @@ slicer_python_version: 3.12
 slicer_release_id: "34621"
 
 slicer_extensions:
-  # TEMP failsafe-message test: bogus extension (revert after test)
-  - DoesNotExist_FailsafeTest
   - SlicerMorph
   - SurfaceWrapSolidify
   - PyTorch
