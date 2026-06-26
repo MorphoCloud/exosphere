@@ -177,7 +177,7 @@
 - name: 'Slicer extension dependencies installed'
   become: true
   become_user: exouser
-  command: "timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
+  command: "timeout -k 30 900 {{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
   environment:
     DISPLAY: :1.0
 

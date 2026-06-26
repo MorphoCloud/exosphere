@@ -1,26 +1,39 @@
+import os
+
 import slicer
 
 
 def installModulePythonDependencies():
-    for moduleName in [
-        "ALPACA",
-    ]:
-        slicer.util.selectModule(moduleName)
+    # Slicer 5.12 SlicerMorph modules self-install their Python deps via an
+    # INTERACTIVE prompt (slicer.packaging.pip_ensure). That dialog can't be
+    # answered during headless setup, so it silently DEFERS -- nothing gets
+    # installed and the user hits "Install Python Packages?" on first use.
+    # Pre-install each module's pinned requirements NON-interactively here, by
+    # reading its requirements_<Module>.txt and pip-installing the specs directly.
+    scriptedModulesDir = os.path.dirname(slicer.util.modulePath("MorphoSourceImport"))
+    for moduleName in ["ALPACA", "MorphoSourceImport", "ImageStacks", "GPA"]:
+        requirementsFile = os.path.join(
+            scriptedModulesDir, "Resources", f"requirements_{moduleName}.txt"
+        )
+        if not os.path.exists(requirementsFile):
+            raise RuntimeError(f"Missing requirements file: {requirementsFile}")
+        with open(requirementsFile) as f:
+            specs = [
+                line.strip()
+                for line in f
+                if line.strip() and not line.lstrip().startswith("#")
+            ]
+        if specs:
+            slicer.util.pip_install(specs)
 
-    # MorphoSourceImport — Slicer 5.12 removed the `morphosourceVersion` symbol;
-    # the module now self-installs its pinned deps (pandas + morphosource) from
-    # Resources/requirements_MorphoSourceImport.txt via slicer.packaging.
-    import MorphoSourceImport
-    MorphoSourceImport._ensure_morphosource_dependencies()
-
-    # ImageStacks
-    slicer.util.pip_install("pynrrd")
-
-    # Animator
+    # Animator (separate extension; no SlicerMorph requirements file)
     slicer.util.pip_install("easing-functions")
 
-    # "GPA":
-    slicer.util.pip_install("pandas")
+    # Verify the dependencies are actually importable, so setup FAILS loudly
+    # instead of reporting success with packages missing (a silent pip_ensure
+    # deferral leaves no exception for the failsafe to catch otherwise).
+    for importName in ["pandas", "morphosource", "sklearn"]:
+        __import__(importName)
 
 
 if __name__ == "__main__":
