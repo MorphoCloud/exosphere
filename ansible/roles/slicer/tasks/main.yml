@@ -163,17 +163,35 @@
 - name: 'Slicer extensions installed'
   become: true
   become_user: exouser
-  # Slicer's exit code is unreliable, so success is detected by grepping the output
-  # for the marker the script prints ONLY on success. A failed/hung extension (no
-  # marker) makes grep -- and therefore this task -- fail, which stops the loop and
-  # fails setup fast instead of silently continuing or hanging until the timeout.
+  # Success is detected by grepping the output for the marker the script prints
+  # ONLY on success (Slicer's exit code is unreliable). An individual extension
+  # failing is NON-FATAL: failed_when:false keeps the loop going, so one broken
+  # or missing extension (often a transient or server-side packaging issue) does
+  # not block provisioning the whole instance. Failures are collected and
+  # reported below, and surfaced on the GitHub issue by the workflow.
   shell: |
     out=$(timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py "{{ item }}" 2>&1)
     printf '%s\n' "$out"
     printf '%s\n' "$out" | grep -q 'SLICER_EXTENSION_INSTALL_OK'
   loop: '{{ slicer_extensions }}'
+  register: slicer_extension_results
+  failed_when: false
   environment:
     DISPLAY: :1.0
+
+- name: 'Collect Slicer extensions that failed to install'
+  set_fact:
+    slicer_failed_extensions: >-
+      {{ slicer_extension_results.results
+         | selectattr('rc', 'defined') | selectattr('rc', 'ne', 0)
+         | map(attribute='item') | list }}
+
+- name: 'Report failed Slicer extensions (non-fatal) to the serial console'
+  become: true
+  shell: >
+    echo 'SLICER_EXTENSIONS_FAILED: {{ slicer_failed_extensions | join(", ") }}'
+    | tee --append /dev/console > /dev/kmsg || true
+  when: slicer_failed_extensions | length > 0
 
 - name: 'File "slicer-install-extension-dependencies.py" copied'
   copy:
