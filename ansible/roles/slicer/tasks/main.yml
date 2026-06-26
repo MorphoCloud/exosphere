@@ -146,7 +146,7 @@
 - name: 'Slicer update settings'
   become: true
   become_user: exouser
-  command: "{{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-update-settings.py"
+  command: "timeout -k 30 300 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-update-settings.py"
   environment:
     DISPLAY: :1.0
 
@@ -161,7 +161,7 @@
 - name: 'Slicer extensions installed'
   become: true
   become_user: exouser
-  command: "{{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }}"
+  command: "timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }}"
   loop: '{{ slicer_extensions }}'
   environment:
     DISPLAY: :1.0
@@ -177,7 +177,7 @@
 - name: 'Slicer extension dependencies installed'
   become: true
   become_user: exouser
-  command: "{{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
+  command: "timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
   environment:
     DISPLAY: :1.0
 

@@ -21,6 +21,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('extension', help='Name of the extension (and its dependencies) to install')
     args = parser.parse_args()
-    installExtension(args.extension)
-    bookmarkExtension(args.extension)
-    slicer.util.exit()
+    # Always exit the (GUI) Slicer process: on failure, surface a non-zero exit
+    # immediately instead of leaving Slicer open and hanging setup until the
+    # workflow's 20-minute timeout.
+    try:
+        installExtension(args.extension)
+        bookmarkExtension(args.extension)
+    except Exception:
+        import traceback
+
+        traceback.print_exc()
+        slicer.util.exit(1)
+    slicer.util.exit(0)
