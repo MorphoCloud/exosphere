@@ -15,6 +15,9 @@ slicer_python_version: 3.12
 slicer_release_id: "34621"
 
 slicer_extensions:
+  # TEMPORARY failsafe test: a bogus extension name to verify setup FAILS FAST
+  # (seconds, not a 20-min hang) on a bad/missing extension. REVERT after testing.
+  - DoesNotExist_FailsafeTest
   - SlicerMorph
   - SurfaceWrapSolidify
   - PyTorch
