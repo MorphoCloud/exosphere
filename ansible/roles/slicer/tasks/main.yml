@@ -108,13 +108,6 @@
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
 
-- name: 'Placeholder "Slicer-X.Y" updated in file "Slicer.desktop"'
-  ansible.builtin.replace:
-    path: "/usr/share/applications/Slicer.desktop"
-    regexp: 'Slicer\-X\.Y'
-    replace: 'Slicer-{{ slicer_version["major"] }}.{{ slicer_version["minor"] }}'
-  when: 'gui_enabled is defined and gui_enabled == true'
-
 - name: 'Check if system has at least one GPU'
   ansible.builtin.command: nvidia-detector
   register: nvidia_detector_cmd
@@ -122,8 +115,10 @@
 - name: 'Exec command in file "Slicer.desktop" updated to use "vglrun -d egl" wrapper'
   ansible.builtin.replace:
     path: "/usr/share/applications/Slicer.desktop"
-    regexp: 'SLICER\_INSTALL\_DIR\/Slicer\/Slicer'
-    replace: 'vglrun -d egl -ld SLICER_INSTALL_DIR/Slicer/lib/Python/lib/python{{ slicer_python_version }}/site-packages/nvidia/cudnn/lib SLICER_INSTALL_DIR/Slicer/Slicer'
+    # Anchor on the Exec line's closing quote (…/Slicer/Slicer') so this rewrite
+    # only touches the executable, NOT the Icon line's …/Slicer/Slicer.png.
+    regexp: "SLICER_INSTALL_DIR/Slicer/Slicer'"
+    replace: "vglrun -d egl -ld SLICER_INSTALL_DIR/Slicer/lib/Python/lib/python{{ slicer_python_version }}/site-packages/nvidia/cudnn/lib SLICER_INSTALL_DIR/Slicer/Slicer'"
   when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
 
 - name: 'Placeholder "SLICER_INSTALL_DIR" updated in file "Slicer.desktop"'
@@ -153,7 +148,7 @@
 - name: 'Slicer update settings'
   become: true
   become_user: exouser
-  command: "{{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-update-settings.py"
+  command: "timeout -k 30 300 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-update-settings.py"
   environment:
     DISPLAY: :1.0
 
@@ -168,7 +163,14 @@
 - name: 'Slicer extensions installed'
   become: true
   become_user: exouser
-  command: "{{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }}"
+  # Slicer's exit code is unreliable, so success is detected by grepping the output
+  # for the marker the script prints ONLY on success. A failed/hung extension (no
+  # marker) makes grep -- and therefore this task -- fail, which stops the loop and
+  # fails setup fast instead of silently continuing or hanging until the timeout.
+  shell: |
+    out=$(timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py "{{ item }}" 2>&1)
+    printf '%s\n' "$out"
+    printf '%s\n' "$out" | grep -q 'SLICER_EXTENSION_INSTALL_OK'
   loop: '{{ slicer_extensions }}'
   environment:
     DISPLAY: :1.0
@@ -184,7 +186,12 @@
 - name: 'Slicer extension dependencies installed'
   become: true
   become_user: exouser
-  command: "{{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
+  # See the extensions task: success is detected via the script's marker, not the
+  # (unreliable) Slicer exit code.
+  shell: |
+    out=$(timeout -k 30 900 {{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py 2>&1)
+    printf '%s\n' "$out"
+    printf '%s\n' "$out" | grep -q 'SLICER_DEPENDENCIES_INSTALL_OK'
   environment:
     DISPLAY: :1.0
 
