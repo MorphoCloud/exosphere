@@ -1,0 +1,78 @@
+name: Claude Code Review
+
+# Automatic review of every human-authored PR. Runs on this public repo's free
+# Actions minutes; Claude usage draws on the maintainer's subscription via
+# CLAUDE_CODE_OAUTH_TOKEN (a repo secret that must be set on this repo — it is
+# NOT inherited from MorphoCloudWorkflow). Re-review after pushing fixes:
+# comment "@claude review" (see claude.yml).
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  review:
+    # Bot PRs (e.g. Dependabot) are skipped — reviewing them is noise.
+    if: github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Claude review
+        uses: anthropics/claude-code-action@11ba60486e4aec9ddfeafcf4bb3f00b028ac2c16 # v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review this pull request. This repo holds MorphoCloud's
+            instance-provisioning Ansible (under `ansible/`), which every cloud
+            instance runs ONCE at first boot via cloud-init, pinned to a specific
+            commit (`exosphere_sha`). A bug here ships to every newly created
+            instance — there is no staging between merge and a user's VM other
+            than the pinned SHA. Focus on what has actually bitten this codebase:
+
+            1. **Ansible correctness (highest value)** — idempotency and re-run
+               safety (`creates:`/`when:` guards, especially the Slicer install
+               on the PERSISTENT volume `/media/volume/MyData`, which survives
+               instance deletion); `loop` failure semantics; `become` /
+               `become_user`; `command` vs `shell`, and whether a task's success
+               is actually detected. We have been bitten by Slicer's
+               `--python-script` exit code being unreliable — success is now
+               detected by grepping stdout for a marker, NOT the exit code.
+            2. **Shell quoting & process control in `shell:`/`command:` tasks** —
+               single-vs-double quotes around `{{ }}` and shell variables,
+               `timeout -k` usage, pipelines whose exit status comes from the
+               wrong command, and `sed`/`grep`/`replace` regex anchors (a
+               `.desktop` `replace` regex once matched both the `Exec` line and
+               the `Slicer.png` `Icon` line).
+            3. **Version / compatibility assumptions** — extension or
+               Python-dependency installs that assume a specific Slicer version
+               or module layout, and anything that would silently leave a
+               headless setup half-done (e.g. an interactive pip prompt that
+               defers instead of installing).
+            4. **Plain bugs** — inverted conditions, wrong paths or variable
+               names, broken placeholder substitution, and tasks that could
+               clobber user data on the persistent volume.
+
+            The upstream Exosphere web client (Elm/JS) also lives in this repo;
+            do NOT review upstream code — focus on MorphoCloud's `ansible/`
+            changes and any cloud-config.
+
+            Report every issue you find, including ones you are uncertain about —
+            include a confidence level and severity for each instead of
+            self-filtering. Use inline comments for specific lines and a
+            top-level comment for overall observations. Do not nitpick style that
+            linters already enforce.
+
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
