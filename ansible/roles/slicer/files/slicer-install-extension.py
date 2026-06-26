@@ -21,9 +21,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('extension', help='Name of the extension (and its dependencies) to install')
     args = parser.parse_args()
-    # Always exit the (GUI) Slicer process: on failure, surface a non-zero exit
-    # immediately instead of leaving Slicer open and hanging setup until the
-    # workflow's 20-minute timeout.
+    # Slicer's process exit code is unreliable from --python-script (slicer.util.exit
+    # does not stop immediately, and a later call overwrites the code), so a failed
+    # run can still exit 0. The caller detects success by grepping for the marker
+    # printed below; a failure prints a traceback and NO marker. exit() is best-effort.
     try:
         installExtension(args.extension)
         bookmarkExtension(args.extension)
@@ -32,4 +33,6 @@ if __name__ == "__main__":
 
         traceback.print_exc()
         slicer.util.exit(1)
-    slicer.util.exit(0)
+    else:
+        print("SLICER_EXTENSION_INSTALL_OK", flush=True)
+        slicer.util.exit(0)

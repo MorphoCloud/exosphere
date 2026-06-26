@@ -37,9 +37,9 @@ def installModulePythonDependencies():
 
 
 if __name__ == "__main__":
-    # Always exit the (GUI) Slicer process: on failure, surface a non-zero exit
-    # immediately instead of leaving Slicer open and hanging setup until the
-    # workflow's 20-minute timeout.
+    # Slicer's process exit code is unreliable from --python-script; the caller detects
+    # success by grepping for the marker printed below. A failure prints a traceback
+    # and NO marker. exit() is best-effort.
     try:
         installModulePythonDependencies()
     except Exception:
@@ -47,4 +47,6 @@ if __name__ == "__main__":
 
         traceback.print_exc()
         slicer.util.exit(1)
-    slicer.util.exit(0)
+    else:
+        print("SLICER_DEPENDENCIES_INSTALL_OK", flush=True)
+        slicer.util.exit(0)

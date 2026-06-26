@@ -163,7 +163,14 @@
 - name: 'Slicer extensions installed'
   become: true
   become_user: exouser
-  command: "timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }}"
+  # Slicer's exit code is unreliable, so success is detected by grepping the output
+  # for the marker the script prints ONLY on success. A failed/hung extension (no
+  # marker) makes grep -- and therefore this task -- fail, which stops the loop and
+  # fails setup fast instead of silently continuing or hanging until the timeout.
+  shell: |
+    out=$(timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }} 2>&1)
+    printf '%s\n' "$out"
+    printf '%s\n' "$out" | grep -q 'SLICER_EXTENSION_INSTALL_OK'
   loop: '{{ slicer_extensions }}'
   environment:
     DISPLAY: :1.0
@@ -179,7 +186,12 @@
 - name: 'Slicer extension dependencies installed'
   become: true
   become_user: exouser
-  command: "timeout -k 30 900 {{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py"
+  # See the extensions task: success is detected via the script's marker, not the
+  # (unreliable) Slicer exit code.
+  shell: |
+    out=$(timeout -k 30 900 {{ slicer_install_dir }}/Slicer/Slicer --python-script {{ support_install_dir }}/dist/slicer-install-extension-dependencies.py 2>&1)
+    printf '%s\n' "$out"
+    printf '%s\n' "$out" | grep -q 'SLICER_DEPENDENCIES_INSTALL_OK'
   environment:
     DISPLAY: :1.0
 
