@@ -24,6 +24,8 @@ def installModulePythonDependencies():
                 if line.strip() and not line.lstrip().startswith("#")
             ]
         if specs:
+            # pip_install accepts a list of specs (Slicer 5.6+) and installs
+            # them in a single call; the list form is intentional.
             slicer.util.pip_install(specs)
 
     # Animator (separate extension; no SlicerMorph requirements file)
@@ -31,7 +33,10 @@ def installModulePythonDependencies():
 
     # Verify the dependencies are actually importable, so setup FAILS loudly
     # instead of reporting success with packages missing (a silent pip_ensure
-    # deferral leaves no exception for the failsafe to catch otherwise).
+    # deferral leaves no exception for the failsafe to catch otherwise). These
+    # are representative imports provided by the requirements files installed
+    # above (pandas/sklearn via the SlicerMorph modules, morphosource via
+    # MorphoSourceImport); keep this list in sync if those requirements change.
     for importName in ["pandas", "morphosource", "sklearn"]:
         __import__(importName)
 

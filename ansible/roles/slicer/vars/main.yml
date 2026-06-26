@@ -20,6 +20,6 @@ slicer_extensions:
   - PyTorch
   - Photogrammetry
   - MorphoDepot
-  - NNInteractive  
+  - NNInteractive
   - DenseCorrespondenceAnalysis
   - SurfaceMarkup

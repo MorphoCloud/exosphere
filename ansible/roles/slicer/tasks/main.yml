@@ -168,7 +168,7 @@
   # marker) makes grep -- and therefore this task -- fail, which stops the loop and
   # fails setup fast instead of silently continuing or hanging until the timeout.
   shell: |
-    out=$(timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py {{ item }} 2>&1)
+    out=$(timeout -k 30 600 {{ slicer_install_dir }}/Slicer/Slicer --disable-modules --python-script {{ support_install_dir }}/dist/slicer-install-extension.py "{{ item }}" 2>&1)
     printf '%s\n' "$out"
     printf '%s\n' "$out" | grep -q 'SLICER_EXTENSION_INSTALL_OK'
   loop: '{{ slicer_extensions }}'
