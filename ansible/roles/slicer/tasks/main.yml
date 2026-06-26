@@ -186,7 +186,15 @@
          | selectattr('rc', 'defined') | selectattr('rc', 'ne', 0)
          | map(attribute='item') | list }}
 
-- name: 'Report failed Slicer extensions (non-fatal) to the serial console'
+- name: 'Record failed Slicer extensions for the completion status line'
+  become: true
+  copy:
+    content: "{{ slicer_failed_extensions | join(', ') }}"
+    dest: "{{ support_install_dir }}/slicer_failed_extensions"
+    mode: "0644"
+  when: slicer_failed_extensions | length > 0
+
+- name: 'Log failed Slicer extensions (non-fatal) to the serial console'
   become: true
   shell: >
     echo 'SLICER_EXTENSIONS_FAILED: {{ slicer_failed_extensions | join(", ") }}'
