@@ -122,9 +122,22 @@ attaching a fresh floating IP to a healthy GPU instance did not break it. So
 this is neither our configuration nor the floating-IP pool; it is a
 JS2-side per-host fault. This is reported separately.
 
-`triage-hosts.sh` gives a verdict in ~90 seconds without needing SSH: a healthy
-instance goes `"starting"` -> `"running"` on the console in about 30 seconds, a
-sick one stalls at `"starting"` while apt retries against a dead route.
+`triage-hosts.py` gives a verdict without needing SSH. There are two distinct
+failure modes and it takes both signals, because the second one is silent:
+
+- **DEAD-EGRESS** — no `"running"` marker well past the ~30 s a healthy boot
+  takes. The instance usually reports `{"status":"error"}` itself.
+- **WEDGED** — the `system-load-logging` heartbeat has gone stale. That cron job
+  runs every minute and needs no network, so a stopped heartbeat means userspace
+  is blocked rather than waiting. Seen with a hanging CephFS `/software`
+  automount, which blocks anything touching `/software` (including Lmod's
+  profile scripts, so sshd accepts the connection then stalls before the
+  banner). This mode reports nothing on its own — without the heartbeat check it
+  is indistinguishable from "still working".
+
+Ages are measured against the newest epoch seen across the batch rather than the
+local clock; the two differ by minutes. Instances whose console has scrolled
+past the boot markers get no verdict rather than a false one.
 
 ## Open points
 
