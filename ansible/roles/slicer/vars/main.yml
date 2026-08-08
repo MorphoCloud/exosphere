@@ -2,7 +2,26 @@
 
 support_install_dir: "/opt/instance-config-support"
 
-slicer_install_dir: "/media/volume/MyData"
+# Slicer lives on the ROOT DISK, not on the user's data volume.
+#
+# /media/volume/MyData is the mount point for the MyData volume. Installing
+# Slicer there meant the application had to be shuttled onto the volume after
+# the volume was attached (the rename -> attach -> copy dance in
+# MorphoCloudWorkflow's setup-instance action), and it makes Slicer invisible
+# to a baked image: a snapshot captures only the root disk, and attaching the
+# volume silently shadows anything already at the mount point.
+#
+# The directory is created owner/group exouser (see tasks/main.yml), and the
+# extensions manager installs into <slicer_install_dir>/Slicer/slicer.org/
+# Extensions-<rev>, so the whole tree -- application and extensions -- must
+# remain user-writable. Do not move this under /home/exouser: that is
+# relocated onto the volume during instance setup.
+#
+# Only the APPLICATION moved. User data stays on the volume: the default scene
+# path (files/slicer-update-settings.py) and the Guacamole SFTP root
+# (roles/guacamole/templates/user-mapping.xml.j2) still point at
+# /media/volume/MyData and must not be changed.
+slicer_install_dir: "/opt/slicer"
 
 slicer_version:
   major: 5
