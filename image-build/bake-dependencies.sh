@@ -64,6 +64,32 @@ for root in $EXT_ROOTS; do
   done < <(find "$root" -maxdepth 6 \( -name 'requirements.txt' -o -name 'requirements_*.txt' \) 2>/dev/null)
 done
 
+# --- extensions that predate the requirements convention ---------------------
+# Not every extension ships a requirements file. Photogrammetry's ClusterPhotos
+# module, for example, does the older lazy dance:
+#
+#     try:    import transformers
+#     except: slicer.util.pip_install("transformers>4.29.2")
+#
+# so nothing declares those deps anywhere on disk and the glob above cannot see
+# them. Scan for literal pip_install arguments and install those too. Skip
+# anything with a shell/format character in it -- those are computed at runtime
+# (e.g. f-strings building a version range) and are not installable as written.
+SCAN="$OUT/pip-scan-literals.txt"
+: > "$SCAN"
+for root in $EXT_ROOTS; do
+  grep -rhoE "pip_install\(\s*[\"'][^\"']+[\"']" "$root" --include='*.py' 2>/dev/null \
+    | sed -E "s/.*[\"']([^\"']+)[\"']/\1/" >> "$SCAN"
+done
+sort -u -o "$SCAN" "$SCAN"
+echo "MC_SCAN_CANDIDATES=$(wc -l < "$SCAN")"
+while IFS= read -r pkg; do
+  [ -z "$pkg" ] && continue
+  case "$pkg" in *" -"*|*"--"*|*"{"*|*"$"*) echo "MC_SCAN_SKIP=$pkg"; continue ;; esac
+  echo "MC_SCAN_INSTALL=$pkg"
+  "$PY" -m pip install --no-cache-dir "$pkg"
+done < "$SCAN"
+
 # --- pinned output -----------------------------------------------------------
 "$PY" -m pip freeze > "$OUT/pip-freeze-after.txt" 2>/dev/null
 diff <(cut -d= -f1 "$OUT/pip-freeze-before.txt" | sort -u) \
