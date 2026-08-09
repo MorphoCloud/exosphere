@@ -36,7 +36,19 @@ import re
 import subprocess
 import sys
 
-RUNNING_BUDGET = 120  # seconds from "starting" to "running" before we call it
+# Seconds from "starting" to "running" before we call an instance dead.
+#
+# Deliberately generous. A quiet boot reaches "running" in ~30-50s, but ten
+# simultaneous launches contending for the same hosts produced legitimate
+# completions at +497s, +574s, +578s, +579s and +587s. An earlier 120s budget
+# condemned all of those as DEAD-EGRESS while they were merely slow, which is
+# the worse error: this tool exists to decide what to delete.
+#
+# Fast detection does not depend on this anyway -- a genuinely dead instance
+# usually self-reports {"status":"error"} within a couple of minutes, and the
+# heartbeat check below catches the silent wedge. This budget is only the
+# backstop for an instance that does neither.
+RUNNING_BUDGET = 600
 HEARTBEAT_BUDGET = 150  # seconds of heartbeat silence before we call it wedged
 
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
