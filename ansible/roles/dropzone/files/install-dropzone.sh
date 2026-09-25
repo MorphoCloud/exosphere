@@ -22,12 +22,17 @@ fail() { echo "install-dropzone: $*" >&2; exit 1; }
 [ -d "$CFG/.git" ] && [ -x "$VENV/bin/ansible-playbook" ] || fail "this does not look like a MorphoCloud instance"
 mountpoint -q "$DATA" || fail "the MyData volume is not mounted"
 
-# The passphrase is the one Guacamole uses for SFTP; root can read it.
-PW="$(sed -n 's:.*<param name="sftp-password">\([^<]*\)</param>.*:\1:p' /opt/guacamole/config/user-mapping.xml 2>/dev/null | head -1 || true)"
+# The passphrase was posted to the OpenStack metadata service at first boot;
+# reuse it if it can be read back, otherwise ask for it.
+PW="$(curl -sf --max-time 5 http://169.254.169.254/openstack/latest/password 2>/dev/null || true)"
+case "$PW" in
+  ""|*'$'*|*'<'*) PW="" ;;
+esac
 if [ -z "$PW" ]; then
-  read -r -s -p "Instance passphrase: " PW < /dev/tty
+  echo "Enter the instance passphrase (the one from your email; it is not shown while typing)."
+  read -r -s -p "Passphrase: " PW < /dev/tty
   echo
-  [ -n "$PW" ] || fail "no passphrase"
+  [ -n "$PW" ] || fail "no passphrase entered"
 fi
 
 echo "Fetching the instance configuration ($REF)..."
