@@ -5,10 +5,13 @@
 # prefix makes the proxy connect upstream over TLS; see dropzone.conf.j2).
 # Runs only when the cloud-config passes dropzone_enabled=true.
 
-# Pinned release; bump version and sha256 together.
-# sha256 is of copyparty-sfx.py from the GitHub release.
-dropzone_version: "v1.20.24"
-dropzone_sha256: "21ec8f7715a3dae6568dc5e00976d7be177042010b2b12ffa8955a8b8c991fb1"
+# Pinned release of the MorphoCloud fork (github.com/MorphoCloud/copyparty,
+# branch "morphocloud": upstream tag + UI patches; see MORPHOCLOUD.md there).
+# Bump version and sha256 together; sha256 is of copyparty-sfx.py from that
+# release.
+dropzone_version: "v1.20.24-mc1"
+dropzone_sha256: "5705f07e9845c841dd9af973b1da95b6067ebe3d1549fec6dd6a519f0c557bed"
+dropzone_download_url: "https://github.com/MorphoCloud/copyparty/releases/download/{{ dropzone_version }}/copyparty-sfx.py"
 
 # Guacamole publishes 49528; keep the drop zone next to it.
 dropzone_port: 49529

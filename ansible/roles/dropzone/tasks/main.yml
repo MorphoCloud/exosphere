@@ -8,7 +8,7 @@
 
 - name: 'copyparty {{ dropzone_version }} downloaded (sha256 verified)'
   get_url:
-    url: 'https://github.com/9001/copyparty/releases/download/{{ dropzone_version }}/copyparty-sfx.py'
+    url: '{{ dropzone_download_url }}'
     dest: '{{ dropzone_install_dir }}/copyparty-sfx.py'
     checksum: 'sha256:{{ dropzone_sha256 }}'
     mode: '0755'
@@ -51,12 +51,6 @@
     - 'key.pem'
     - 'crt.pem'
     - 'cert.pem'
-
-- name: 'dropzone UI overrides installed'
-  copy:
-    src: 'head.html'
-    dest: '{{ dropzone_install_dir }}/head.html'
-    mode: '0644'
 
 # Contains the exouser passphrase (same one Guacamole and SSH use), so it is
 # readable by exouser only.

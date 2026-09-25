@@ -25,12 +25,12 @@
   no-robots
   name: MorphoCloud
   # Minimal UI: no navpane, control-panel link, repl button or context
-  # buttons; head.html hides the rest (see files/head.html).
+  # buttons. The rest of the trimming and the plain-English strings are
+  # built into the MorphoCloud fork (mc.css / mc.js).
   ui-notree
   ui-nocpla
   ui-norepl
   ui-noctxb
-  html-head: %@{{ dropzone_install_dir }}/head.html
 
 [accounts]
   exouser: {{ exouser_passphrase }}
