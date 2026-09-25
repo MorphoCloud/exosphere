@@ -18,8 +18,19 @@
   # everyone using the proxy. The passphrase is 11 random words; disable.
   ban-pw: no
   u2sz: {{ dropzone_chunk_mib }}
+  # Parallel uploads per browser. The proxy is HTTP/1.1 and uploads of many
+  # small files (microCT slices) are latency-bound, so go well past the
+  # default of 2.
+  u2j: {{ dropzone_parallel_uploads }}
   no-robots
   name: MorphoCloud
+  # Minimal UI: no navpane, control-panel link, repl button or context
+  # buttons; head.html hides the rest (see files/head.html).
+  ui-notree
+  ui-nocpla
+  ui-norepl
+  ui-noctxb
+  html-head: %@{{ dropzone_install_dir }}/head.html
 
 [accounts]
   exouser: {{ exouser_passphrase }}
@@ -27,4 +38,6 @@
 [/]
   {{ dropzone_root }}
   accs:
-    A: exouser
+    # read/write/move/delete/dotfiles; not admin, which would add hash and
+    # uploader columns to the listing.
+    rwmd.: exouser

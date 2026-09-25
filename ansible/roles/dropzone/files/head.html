@@ -1,0 +1,71 @@
+<!-- MorphoCloud drop zone: strip the copyparty UI to the essentials.
+     Injected into every page via `html-head: %@/opt/dropzone/head.html`
+     (the % makes copyparty render it as jinja so the script nonce works).
+     Page roots: #ht_spl = login/control panel, #ht_brw = file browser,
+     #ht_msg = message pages (e.g. wrong password). -->
+<style>
+/* ---- login page ---- */
+#ht_spl #a, #ht_spl #v, #ht_spl #b, #ht_spl #msg, #ht_spl #cc, #ht_spl .agr,
+#ht_spl h1#l, #ht_spl #f, #ht_spl #g, #ht_spl #aa, #ht_spl #ae, #ht_spl #repl, #ht_spl #pb {
+  display: none !important;
+}
+#ht_spl #wrap { max-width: 30em !important; margin: 5em auto 0 !important; }
+#ht_spl #lf::before {
+  content: "MorphoCloud upload";
+  display: block; font-size: 1.8em; margin-bottom: .2em;
+}
+#ht_spl #lf::after {
+  content: "Enter the passphrase from your instance email, then drop files or folders onto the page.";
+  display: block; margin-top: 1em; opacity: .75; line-height: 1.4;
+}
+#ht_spl #lp { width: 100%; box-sizing: border-box; font-size: 1.1em; margin: .6em 0; }
+#ht_spl #ls { font-size: 1.1em; }
+
+/* ---- wrong-password page ---- */
+#ht_msg #box { max-width: 30em; margin: 5em auto 0; padding: 1em 1.5em; }
+#ht_msg #box h1 { font-size: 0; }
+#ht_msg #box h1::before {
+  content: "That passphrase did not match";
+  font-size: 1.6rem;
+}
+#ht_msg #box h2 { font-size: 1.1em; font-weight: normal; }
+#ht_msg #box h2::before { content: "Check the email and "; }
+#ht_msg #box h2 a::before { content: "try again"; }
+#ht_msg #box h2 a { font-size: 0; }
+#ht_msg #box h2 a::before { font-size: 1.1rem; }
+
+/* ---- file browser ---- */
+#ht_brw #ops > a:not(#opa_up):not(#opa_mkd) { display: none !important; }
+#ht_brw #u2notbtn, #ht_brw #u2cards, #ht_brw #srv_info2 { display: none !important; }
+/* upload settings table (parallelism, turbo, etc.): server sets the defaults;
+   the script below keeps the drop button and ETA outside it */
+#ht_brw #u2conf { display: none !important; }
+#ht_brw #files th[name="lead"], #ht_brw #files td:first-child { display: none !important; }
+#ht_brw #u2btn { font-size: 1.3em; }
+#ht_brw #u2etaw { float: none !important; margin: .5em auto !important; }
+</style>
+<script nonce="{{ js_nonce }}">
+(function () {
+  function ready(f) { if (document.readyState !== "loading") f(); else document.addEventListener("DOMContentLoaded", f); }
+  ready(function () {
+    var lp = document.getElementById("lp");
+    if (lp) { lp.placeholder = "instance passphrase"; lp.focus(); }
+    // Open the upload panel by default so the drop target and progress are visible.
+    var up = document.getElementById("opa_up");
+    if (up && !document.querySelector(".opview.act")) setTimeout(function () { up.click(); }, 50);
+    // copyparty moves the drop button and ETA into the (hidden) settings table
+    // on wide windows; keep them in the narrow-layout containers instead.
+    function place() {
+      var pairs = [["u2btn", "u2btn_ct"], ["u2etaw", "u2c3t"]];
+      for (var i = 0; i < pairs.length; i++) {
+        var el = document.getElementById(pairs[i][0]), ct = document.getElementById(pairs[i][1]);
+        if (el && ct && el.parentNode !== ct) ct.appendChild(el);
+      }
+    }
+    if (up) {
+      setTimeout(place, 100); setTimeout(place, 1000);
+      window.addEventListener("resize", function () { setTimeout(place, 0); });
+    }
+  });
+})();
+</script>

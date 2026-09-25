@@ -25,3 +25,7 @@ dropzone_root: "/media/volume/MyData"
 # Upload chunk size in MiB. Kept small so the Exosphere proxy body limit,
 # which is not ours to configure, never rejects a chunk.
 dropzone_chunk_mib: 32
+
+# Browser-side parallel uploads (copyparty --u2j). 16 measured much faster
+# than the default 2 for thousands of small files through the proxy.
+dropzone_parallel_uploads: 16
