@@ -1,0 +1,54 @@
+---
+
+- name: 'dropzone install directory created'
+  file:
+    path: '{{ dropzone_install_dir }}'
+    state: 'directory'
+    mode: '0755'
+
+- name: 'copyparty {{ dropzone_version }} downloaded (sha256 verified)'
+  get_url:
+    url: 'https://github.com/9001/copyparty/releases/download/{{ dropzone_version }}/copyparty-sfx.py'
+    dest: '{{ dropzone_install_dir }}/copyparty-sfx.py'
+    checksum: 'sha256:{{ dropzone_sha256 }}'
+    mode: '0755'
+  register: 'dropzone_download'
+  retries: 5
+  delay: 10
+  until: 'dropzone_download is succeeded'
+
+- name: 'dropzone state directory created'
+  file:
+    path: '{{ dropzone_hist_dir }}'
+    state: 'directory'
+    owner: 'exouser'
+    group: 'exouser'
+    mode: '0700'
+
+# Contains the exouser passphrase (same one Guacamole and SSH use), so it is
+# readable by exouser only.
+- name: 'dropzone configuration templated'
+  template:
+    src: 'dropzone.conf.j2'
+    dest: '{{ dropzone_install_dir }}/dropzone.conf'
+    owner: 'exouser'
+    group: 'exouser'
+    mode: '0600'
+  no_log: true
+
+- name: 'dropzone systemd unit installed'
+  template:
+    src: 'dropzone.service.j2'
+    dest: '/etc/systemd/system/dropzone.service'
+    mode: '0644'
+
+- name: 'dropzone service enabled'
+  systemd:
+    name: 'dropzone'
+    daemon_reload: true
+    enabled: true
+
+# --no-block: the unit waits for the MyData volume to be mounted before it
+# serves, and at first boot the volume is attached only later by the workflow.
+- name: 'dropzone service started'
+  command: 'systemctl start --no-block dropzone'
