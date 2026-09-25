@@ -35,9 +35,17 @@
 [accounts]
   exouser: {{ exouser_passphrase }}
 
+# The whole volume is browsable and downloadable, but nothing outside
+# Uploads can be changed from the browser: the volume also holds the home
+# directory and the Slicer install.
 [/]
   {{ dropzone_root }}
   accs:
-    # read/write/move/delete/dotfiles; not admin, which would add hash and
-    # uploader columns to the listing.
-    rwmd.: exouser
+    r: exouser
+
+# Full rights in Uploads only (read/write/move/delete; not admin, which would
+# add hash and uploader columns to the listing).
+[/Uploads]
+  {{ dropzone_root }}/Uploads
+  accs:
+    rwmd: exouser
