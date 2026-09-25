@@ -3,14 +3,20 @@
 
 [global]
   p: {{ dropzone_port }}
-  # TLS is terminated by the Exosphere proxy.
-  http-only
+  # Serve TLS with our own self-signed cert and refuse plaintext. The
+  # Exosphere proxy (https-<ip>-<port>.proxy-...) connects upstream over TLS
+  # without verifying the cert, and copyparty then knows the browser origin
+  # is https, which its CSRF check requires. Plain HTTP behind the proxy
+  # fails that check because the proxy sends no X-Forwarded-For.
+  cert: {{ dropzone_install_dir }}/cert.pem
+  no-crt
+  https-only
   # up2k database: resumable, deduplicated uploads.
   e2d
   hist: {{ dropzone_hist_dir }}
-  # Clients arrive via the Exosphere proxy; trust its X-Forwarded-For so the
-  # brute-force ban keys on the real client, not on the proxy.
-  xff-src: any
+  # The proxy hides client IPs, so a failed-password ban would lock out
+  # everyone using the proxy. The passphrase is 11 random words; disable.
+  ban-pw: no
   u2sz: {{ dropzone_chunk_mib }}
   no-robots
   name: MorphoCloud

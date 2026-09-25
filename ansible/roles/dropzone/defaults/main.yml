@@ -1,9 +1,9 @@
 ---
 # Drop zone: browser drag-and-drop uploader (copyparty) rooted at the MyData
 # volume. Reached through the Exosphere user-app proxy on
-# https://http-<ip-dashed>-<port>.proxy-js2-iu.exosphere.app/ (same scheme as
-# the Guacamole web desktop). Runs only when the cloud-config passes
-# dropzone_enabled=true.
+# https://https-<ip-dashed>-<port>.proxy-js2-iu.exosphere.app/ (the "https-"
+# prefix makes the proxy connect upstream over TLS; see dropzone.conf.j2).
+# Runs only when the cloud-config passes dropzone_enabled=true.
 
 # Pinned release; bump version and sha256 together.
 # sha256 is of copyparty-sfx.py from the GitHub release.

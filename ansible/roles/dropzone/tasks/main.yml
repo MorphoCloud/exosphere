@@ -25,6 +25,33 @@
     group: 'exouser'
     mode: '0700'
 
+# Self-signed TLS cert (key + cert concatenated, copyparty's --cert format).
+# Only the Exosphere proxy talks to it, with verification off; users never
+# see this cert.
+- name: 'dropzone TLS key and certificate generated'
+  command: >-
+    openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes
+    -keyout {{ dropzone_install_dir }}/key.pem -out {{ dropzone_install_dir }}/crt.pem
+    -days 3650 -subj /CN=morphocloud-dropzone
+  args:
+    creates: '{{ dropzone_install_dir }}/crt.pem'
+
+- name: 'dropzone TLS bundle assembled'
+  shell: 'cat {{ dropzone_install_dir }}/key.pem {{ dropzone_install_dir }}/crt.pem > {{ dropzone_install_dir }}/cert.pem'
+  args:
+    creates: '{{ dropzone_install_dir }}/cert.pem'
+
+- name: 'dropzone TLS files readable by exouser only'
+  file:
+    path: '{{ dropzone_install_dir }}/{{ item }}'
+    owner: 'exouser'
+    group: 'exouser'
+    mode: '0600'
+  loop:
+    - 'key.pem'
+    - 'crt.pem'
+    - 'cert.pem'
+
 # Contains the exouser passphrase (same one Guacamole and SSH use), so it is
 # readable by exouser only.
 - name: 'dropzone configuration templated'
