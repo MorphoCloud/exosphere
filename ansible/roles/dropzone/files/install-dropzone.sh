@@ -3,7 +3,7 @@
 #
 # Run on the instance, in the web shell or a desktop terminal:
 #
-#   curl -fsSL https://raw.githubusercontent.com/MorphoCloud/exosphere/dropzone-prototype/ansible/roles/dropzone/files/install-dropzone.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/MorphoCloud/exosphere/morpho-cloud-portal-2026.06-ubuntu24-prep/ansible/roles/dropzone/files/install-dropzone.sh | sudo bash
 #
 # It runs the same ansible role a new instance runs at first boot (from the
 # exosphere checkout every instance already has), creates the Uploads folder
@@ -15,7 +15,7 @@
 #                      reinstall  install again even if present
 set -euo pipefail
 
-REF="${DROPZONE_EXOSPHERE_REF:-dropzone-prototype}"
+REF="${DROPZONE_EXOSPHERE_REF:-morpho-cloud-portal-2026.06-ubuntu24-prep}"
 CFG=/opt/instance-config-mgt
 VENV=/opt/ansible-venv
 DATA=/media/volume/MyData
