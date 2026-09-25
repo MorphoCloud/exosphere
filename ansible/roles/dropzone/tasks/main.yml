@@ -1,0 +1,81 @@
+---
+
+- name: 'dropzone install directory created'
+  file:
+    path: '{{ dropzone_install_dir }}'
+    state: 'directory'
+    mode: '0755'
+
+- name: 'copyparty {{ dropzone_version }} downloaded (sha256 verified)'
+  get_url:
+    url: '{{ dropzone_download_url }}'
+    dest: '{{ dropzone_install_dir }}/copyparty-sfx.py'
+    checksum: 'sha256:{{ dropzone_sha256 }}'
+    mode: '0755'
+  register: 'dropzone_download'
+  retries: 5
+  delay: 10
+  until: 'dropzone_download is succeeded'
+
+- name: 'dropzone state directory created'
+  file:
+    path: '{{ dropzone_hist_dir }}'
+    state: 'directory'
+    owner: 'exouser'
+    group: 'exouser'
+    mode: '0700'
+
+# Self-signed TLS cert (key + cert concatenated, copyparty's --cert format).
+# Only the Exosphere proxy talks to it, with verification off; users never
+# see this cert.
+- name: 'dropzone TLS key and certificate generated'
+  command: >-
+    openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes
+    -keyout {{ dropzone_install_dir }}/key.pem -out {{ dropzone_install_dir }}/crt.pem
+    -days 3650 -subj /CN=morphocloud-dropzone
+  args:
+    creates: '{{ dropzone_install_dir }}/crt.pem'
+
+- name: 'dropzone TLS bundle assembled'
+  shell: 'cat {{ dropzone_install_dir }}/key.pem {{ dropzone_install_dir }}/crt.pem > {{ dropzone_install_dir }}/cert.pem'
+  args:
+    creates: '{{ dropzone_install_dir }}/cert.pem'
+
+- name: 'dropzone TLS files readable by exouser only'
+  file:
+    path: '{{ dropzone_install_dir }}/{{ item }}'
+    owner: 'exouser'
+    group: 'exouser'
+    mode: '0600'
+  loop:
+    - 'key.pem'
+    - 'crt.pem'
+    - 'cert.pem'
+
+# Contains the exouser passphrase (same one Guacamole and SSH use), so it is
+# readable by exouser only.
+- name: 'dropzone configuration templated'
+  template:
+    src: 'dropzone.conf.j2'
+    dest: '{{ dropzone_install_dir }}/dropzone.conf'
+    owner: 'exouser'
+    group: 'exouser'
+    mode: '0600'
+  no_log: true
+
+- name: 'dropzone systemd unit installed'
+  template:
+    src: 'dropzone.service.j2'
+    dest: '/etc/systemd/system/dropzone.service'
+    mode: '0644'
+
+- name: 'dropzone service enabled'
+  systemd:
+    name: 'dropzone'
+    daemon_reload: true
+    enabled: true
+
+# --no-block: the unit waits for the MyData volume to be mounted before it
+# serves, and at first boot the volume is attached only later by the workflow.
+- name: 'dropzone service started'
+  command: 'systemctl start --no-block dropzone'

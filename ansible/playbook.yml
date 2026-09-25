@@ -31,6 +31,11 @@
       tags:
         - 'guacamole'
       when: 'guac_enabled | default(false) == true'
+    # Browser drag-and-drop uploader for the MyData volume (needs the passphrase fact)
+    - role: 'dropzone'
+      tags:
+        - 'dropzone'
+      when: 'dropzone_enabled | default(false) == true'
     - role: 'workflow'
       tags:
         - 'workflow'

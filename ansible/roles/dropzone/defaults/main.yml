@@ -1,0 +1,34 @@
+---
+# Drop zone: browser drag-and-drop uploader (copyparty) rooted at the MyData
+# volume. Reached through the Exosphere user-app proxy on
+# https://https-<ip-dashed>-<port>.proxy-js2-iu.exosphere.app/ (the "https-"
+# prefix makes the proxy connect upstream over TLS; see dropzone.conf.j2).
+# Runs only when the cloud-config passes dropzone_enabled=true.
+
+# Pinned release of the MorphoCloud fork (github.com/MorphoCloud/copyparty,
+# branch "morphocloud": upstream tag + UI patches; see MORPHOCLOUD.md there).
+# Bump version and sha256 together; sha256 is of copyparty-sfx.py from that
+# release.
+dropzone_version: "v1.20.24-mc1"
+dropzone_sha256: "5705f07e9845c841dd9af973b1da95b6067ebe3d1549fec6dd6a519f0c557bed"
+dropzone_download_url: "https://github.com/MorphoCloud/copyparty/releases/download/{{ dropzone_version }}/copyparty-sfx.py"
+
+# Guacamole publishes 49528; keep the drop zone next to it.
+dropzone_port: 49529
+
+dropzone_install_dir: "/opt/dropzone"
+
+# up2k database and other state stay on the root disk, off the user's volume.
+dropzone_hist_dir: "/var/lib/dropzone"
+
+# Served as "/" so the browser sees the whole volume; uploads land wherever
+# the user drops them (the emailed link opens /Uploads/).
+dropzone_root: "/media/volume/MyData"
+
+# Upload chunk size in MiB. Kept small so the Exosphere proxy body limit,
+# which is not ours to configure, never rejects a chunk.
+dropzone_chunk_mib: 32
+
+# Browser-side parallel uploads (copyparty --u2j). 16 measured much faster
+# than the default 2 for thousands of small files through the proxy.
+dropzone_parallel_uploads: 16

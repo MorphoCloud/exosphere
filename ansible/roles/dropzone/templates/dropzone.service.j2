@@ -1,0 +1,24 @@
+[Unit]
+Description=MorphoCloud drop zone (copyparty) serving {{ dropzone_root }}
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=exouser
+Group=exouser
+# Give the exosphere automount up to 90 s to mount the MyData volume before
+# serving, so the first requests after a reboot see the volume and not the
+# empty mount point. Start anyway afterwards: at first boot there is no volume
+# yet, and copyparty resolves paths per request, so it picks the volume up
+# once it appears.
+ExecStartPre=/bin/sh -c 'for i in $(seq 1 45); do mountpoint -q {{ dropzone_root }} && exit 0; sleep 2; done; exit 0'
+ExecStart=/usr/bin/python3 {{ dropzone_install_dir }}/copyparty-sfx.py -c {{ dropzone_install_dir }}/dropzone.conf
+Restart=always
+RestartSec=5
+# The sfx unpacks itself into $TMPDIR.
+PrivateTmp=true
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
