@@ -119,7 +119,23 @@
     # only touches the executable, NOT the Icon line's …/Slicer/Slicer.png.
     regexp: "SLICER_INSTALL_DIR/Slicer/Slicer'"
     replace: "vglrun -d egl -ld SLICER_INSTALL_DIR/Slicer/lib/Python/lib/python{{ slicer_python_version }}/site-packages/nvidia/cudnn/lib SLICER_INSTALL_DIR/Slicer/Slicer'"
-  when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true'
+  when: 'nvidia_detector_cmd.stdout != "None" and gui_enabled is defined and gui_enabled == true and storage_mode | default("") != "share"'
+
+# Share mode: one image serves GPU and CPU flavors, so the launcher decides at
+# launch time instead of the GPU check above.
+- name: 'Launcher "morphocloud-slicer" installed (share mode)'
+  template:
+    src: 'morphocloud-slicer.j2'
+    dest: '/usr/local/bin/morphocloud-slicer'
+    mode: "755"
+  when: 'gui_enabled is defined and gui_enabled == true and storage_mode | default("") == "share"'
+
+- name: 'Exec command in file "Slicer.desktop" uses the launcher (share mode)'
+  ansible.builtin.replace:
+    path: "/usr/share/applications/Slicer.desktop"
+    regexp: "SLICER_INSTALL_DIR/Slicer/Slicer'"
+    replace: "/usr/local/bin/morphocloud-slicer'"
+  when: 'gui_enabled is defined and gui_enabled == true and storage_mode | default("") == "share"'
 
 - name: 'Placeholder "SLICER_INSTALL_DIR" updated in file "Slicer.desktop"'
   ansible.builtin.replace:
@@ -138,8 +154,8 @@
   when: 'gui_enabled is defined and gui_enabled == true'
 
 - name: 'File "slicer-update-settings.py" copied'
-  copy:
-    src: 'slicer-update-settings.py'
+  template:
+    src: 'slicer-update-settings.py.j2'
     dest: "{{ support_install_dir }}/dist/slicer-update-settings.py"
     mode: "644"
     owner: "exouser"
