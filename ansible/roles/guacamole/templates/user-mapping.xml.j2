@@ -9,7 +9,11 @@
             <param name="port">22</param>
             <param name="username">exouser</param>
             <param name="password">${GUAC_PASSWORD}</param>
+{% if storage_mode | default('') == 'share' %}
+            <param name="enable-sftp">false</param>
+{% else %}
             <param name="enable-sftp">true</param>
+{% endif %}
         </connection>
         {% if gui_enabled | default(false) == true %}
         <connection name="desktop">
@@ -18,6 +22,10 @@
             <param name="port">5901</param>
             <param name="autoretry">3</param>
             <param name="password">${GUAC_PASSWORD}</param>
+{% if storage_mode | default('') == 'share' %}
+            {# Share mode: no file transfer here; the MorphoCloud portal's file browser replaces it. #}
+            <param name="enable-sftp">false</param>
+{% else %}
             <param name="enable-sftp">true</param>
             <param name="sftp-hostname">172.17.0.1</param>
             <param name="sftp-port">22</param>
@@ -25,6 +33,7 @@
             <param name="sftp-password">${GUAC_PASSWORD}</param>
 	    <param name="sftp-directory">/media/volume/MyData</param>
      	    <param name="sftp-root-directory">/media/volume/MyData</param>
+{% endif %}
         </connection>
         {% endif %}
     </authorize>
