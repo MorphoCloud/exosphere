@@ -12,8 +12,11 @@ services:
     environment:
       WATCHTOWER_LABEL_ENABLE: 'true'
       WATCHTOWER_CLEANUP: 'true'
+  # Guacamole pinned to 1.6.0 (upstream Docker Hub images): the first release
+  # that resizes VNC sessions to the browser window (GUACAMOLE-1196). The
+  # exosphere registry mirror is still on 1.5.5.
   exo-guac-guacd:
-    image: 'registry.gitlab.com/exosphere/exosphere/guacamole/guacd'
+    image: 'guacamole/guacd:1.6.0'
     restart: 'always'
     hostname: 'guacd'
     networks:
@@ -21,7 +24,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
   exo-guac-guacamole:
-    image: 'registry.gitlab.com/exosphere/exosphere/guacamole/guacamole'
+    image: 'guacamole/guacamole:1.6.0'
     restart: 'always'
     networks:
       exo-guac-net:
