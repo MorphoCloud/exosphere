@@ -5,6 +5,9 @@ Name=Update Desktop Settings
 # Update Gnome Shell settings to show mounted volumes
 # Allow "Slicer.desktop" to be executed
 # Allow "ExtendInstanceSession.desktop" to be executed
-Exec=sh -c 'dconf write /org/gnome/shell/extensions/dash-to-dock/show-mounts true && gio set /home/exouser/Desktop/Slicer.desktop metadata::trusted true && gio set /home/exouser/Desktop/ExtendInstanceSession.desktop metadata::trusted true'
+# Then touch both: the desktop (DING) reads the trusted mark only when it
+# draws a file or the file changes, and it may have drawn them before this
+# runs (MorphoCloud Test-Instances #592-#594: red "not allowed" emblem).
+Exec=sh -c 'dconf write /org/gnome/shell/extensions/dash-to-dock/show-mounts true && gio set /home/exouser/Desktop/Slicer.desktop metadata::trusted true && gio set /home/exouser/Desktop/ExtendInstanceSession.desktop metadata::trusted true && touch /home/exouser/Desktop/Slicer.desktop /home/exouser/Desktop/ExtendInstanceSession.desktop'
 Icon=
 Comment=These commands are executed automatically on login
