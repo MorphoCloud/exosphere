@@ -91,6 +91,26 @@
     src: 'screenlock.j2'
     dest: '/etc/dconf/db/local.d/locks/screensaver'
 
+# MorphoCloud: the desktop background is the MorphoCloud logo, centred on
+# light gray (the same image and color as the Kubernetes desktop). A default,
+# not a lock: a member can still choose another background.
+- name: 'MorphoCloud backgrounds directory created'
+  file:
+    path: '/usr/share/backgrounds/morphocloud'
+    state: 'directory'
+    mode: '0755'
+
+- name: 'MorphoCloud logo installed'
+  copy:
+    src: 'MC_Logo.png'
+    dest: '/usr/share/backgrounds/morphocloud/MC_Logo.png'
+    mode: '0644'
+
+- name: 'Desktop background set to the MorphoCloud logo'
+  template:
+    src: '00-morphocloud-background.j2'
+    dest: '/etc/dconf/db/local.d/00-morphocloud-background'
+
 - name: 'dconf database updated'
   command: 'dconf update'
 
