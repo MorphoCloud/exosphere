@@ -111,6 +111,15 @@
     src: '00-morphocloud-background.j2'
     dest: '/etc/dconf/db/local.d/00-morphocloud-background'
 
+# MorphoCloud: Slicer first in the sidebar. The Jetstream2 image's
+# 00-favorites.js2 sets the list; this file sorts after it, so its list is the
+# one used. The rest is the image's list unchanged. A launcher that is not
+# installed is not shown.
+- name: 'Slicer added to the sidebar'
+  template:
+    src: '01-morphocloud-favorites.j2'
+    dest: '/etc/dconf/db/local.d/01-morphocloud-favorites'
+
 - name: 'dconf database updated'
   command: 'dconf update'
 
