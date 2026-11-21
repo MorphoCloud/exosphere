@@ -1,0 +1,7 @@
+# MorphoCloud: Slicer first in the sidebar. This file overrides the Jetstream2
+# image's /etc/dconf/db/local.d/00-favorites.js2 (it sorts after it, so its
+# favorite-apps is the one dconf uses). The list after Slicer.desktop is that
+# file's list as of 2026-11-21: when the image changes its list, copy the new
+# one here, or the image's change does not reach the sidebar.
+[org/gnome/shell]
+favorite-apps=['Slicer.desktop', 'firefox.desktop', 'rstudio.desktop', 'matlab.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']
