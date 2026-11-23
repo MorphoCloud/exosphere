@@ -1,0 +1,11 @@
+# MorphoCloud: keeps Ubuntu's update-notifier from starting in the desktop
+# session, so Software Updater does not open on its own. This file has the same
+# name as /etc/xdg/autostart/update-notifier.desktop and replaces it for
+# exouser; Hidden=true means it is not started. Security updates still install
+# in the background. To turn the check back on, delete this file.
+# MorphoCloudWorkflow STORAGE_REDESIGN_PLAN.md, decision 20.
+[Desktop Entry]
+Type=Application
+Name=Update Notifier
+Exec=update-notifier
+Hidden=true

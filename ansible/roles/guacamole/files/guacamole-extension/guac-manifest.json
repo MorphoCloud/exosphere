@@ -3,6 +3,7 @@
   "name": "Exosphere Login Page Replacement",
   "namespace": "exosphere",
   "css": ["css/exosphere.css"],
+  "js": ["js/css-pixels.js"],
   "html": ["html/loginHeader.html"],
   "resources": {
     "resources/images/logo.svg": "image/svg+xml"

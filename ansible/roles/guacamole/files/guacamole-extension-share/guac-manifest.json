@@ -1,0 +1,6 @@
+{
+  "guacamoleVersion": "*",
+  "name": "MorphoCloud share mode: no side panel",
+  "namespace": "morphocloud-share",
+  "js": ["js/no-menu.js"]
+}

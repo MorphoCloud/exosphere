@@ -32,6 +32,14 @@
     chdir: /opt/instance-config-mgt/ansible/roles/guacamole/files/guacamole-extension/
     cmd: zip -r /opt/guacamole/config/extensions/guacamole-exosphere-ext.jar *
 
+# Share mode (MorphoCloud portal): a second extension keeps Guacamole's side
+# panel closed and ignores file drops; the portal's file browser replaces them.
+- name: Build MorphoCloud share-mode guacamole extension
+  shell:
+    chdir: /opt/instance-config-mgt/ansible/roles/guacamole/files/guacamole-extension-share/
+    cmd: zip -r /opt/guacamole/config/extensions/morphocloud-share-ext.jar *
+  when: 'storage_mode | default("") == "share"'
+
 - name: 'docker-compose file written'
   copy:
     src: 'docker-compose.yml'

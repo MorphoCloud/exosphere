@@ -6,6 +6,8 @@ slicer_prerequisites_package_names:
   - 'libnss3'
   - 'libasound2t64'
   - 'qt5dxcb-plugin'
+  # On Slicer's own list (Slicer/Slicer Utilities/Scripts/SlicerInstallers/deps/apt.txt)
+  - 'libsm6'
   # Required by "slicer-download.sh"
   - 'curl'
   - 'jq'

@@ -12,16 +12,28 @@ services:
     environment:
       WATCHTOWER_LABEL_ENABLE: 'true'
       WATCHTOWER_CLEANUP: 'true'
+  # Guacamole pinned to 1.6.0 (upstream Docker Hub images): the first release
+  # that resizes VNC sessions to the browser window (GUACAMOLE-1196). The
+  # exosphere registry mirror is still on 1.5.5.
+  # Pinned by digest (the multi-arch index of the 1.6.0 tag, 2026-11-23): a
+  # re-pointed upstream tag cannot reach instances, and Watchtower is told to
+  # leave both containers alone. To update, change the tag and the digest
+  # here; the digest is the multi-arch index's (not one platform's), e.g.:
+  #   T=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:guacamole/guacd:pull" | jq -r .token)
+  #   curl -sI -H "Authorization: Bearer $T" \
+  #     -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json" \
+  #     https://registry-1.docker.io/v2/guacamole/guacd/manifests/X.Y.Z | grep -i docker-content-digest
+  # (same for guacamole/guacamole).
   exo-guac-guacd:
-    image: 'registry.gitlab.com/exosphere/exosphere/guacamole/guacd'
+    image: 'guacamole/guacd:1.6.0@sha256:8974eaa9ba32f713daf311e7cc8cd7e4cdfba1edea39eed75524e78ef4b08f4f'
     restart: 'always'
     hostname: 'guacd'
     networks:
       exo-guac-net:
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.enable=false"
   exo-guac-guacamole:
-    image: 'registry.gitlab.com/exosphere/exosphere/guacamole/guacamole'
+    image: 'guacamole/guacamole:1.6.0@sha256:f344085e618bb05e22b964b0208dbd06d3468275bac70206f93805245e067b40'
     restart: 'always'
     networks:
       exo-guac-net:
@@ -39,4 +51,4 @@ services:
     ports:
       - '49528:8080'
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.enable=false"

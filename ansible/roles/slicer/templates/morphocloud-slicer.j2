@@ -1,0 +1,8 @@
+#!/bin/bash
+# Starts 3D Slicer, on the GPU when this instance has one. Decided at launch,
+# not when the image was built, because one image serves GPU and CPU flavors.
+SLICER_DIR="{{ slicer_install_dir }}/Slicer"
+if nvidia-smi -L >/dev/null 2>&1; then
+  exec vglrun -d egl -ld "$SLICER_DIR/lib/Python/lib/python{{ slicer_python_version }}/site-packages/nvidia/cudnn/lib" "$SLICER_DIR/Slicer" "$@"
+fi
+exec "$SLICER_DIR/Slicer" "$@"

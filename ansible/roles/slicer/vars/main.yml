@@ -2,7 +2,11 @@
 
 support_install_dir: "/opt/instance-config-support"
 
+# Share mode (storage_mode=share, MorphoCloudWorkflow STORAGE_REDESIGN_PLAN.md)
+# passes slicer_install_dir=/opt/slicer and slicer_default_scene_path as extra
+# vars; these defaults are the volume layout.
 slicer_install_dir: "/media/volume/MyData"
+slicer_default_scene_path: "/media/volume/MyData"
 
 slicer_version:
   major: 5
