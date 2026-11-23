@@ -314,3 +314,16 @@
     owner: "exouser"
     group: "exouser"
   when: 'gui_enabled is defined and gui_enabled == true'
+
+# MorphoCloud (decision 20): Software Updater must not open on its own. It
+# offers the kernel and NVIDIA packages that the background security updates
+# hold back, and installing them can leave the instance without a GPU after
+# the next boot. The new-release offer is already off (Prompt=never above).
+- name: 'Update notifier kept from starting in the desktop session'
+  copy:
+    src: 'autostart-update-notifier.desktop'
+    dest: '/home/exouser/.config/autostart/update-notifier.desktop'
+    mode: "644"
+    owner: "exouser"
+    group: "exouser"
+  when: 'gui_enabled is defined and gui_enabled == true'
