@@ -1,0 +1,10 @@
+# MorphoCloud: desktop icons start at the top-left, sorted by name. Ubuntu's
+# 10_ubuntu-settings.gschema.override sets, for the Ubuntu session only
+# ([org.gnome.shell.extensions.ding:ubuntu]), start-corner='bottom-right' and
+# arrangeorder='DESCENDINGNAME': new icons (a folder made on the desktop) went
+# to the bottom-right corner and the launchers were laid out from the wrong
+# end (2026-11-24). A system dconf value wins over every schema default;
+# members can still change it in the desktop's settings.
+[org/gnome/shell/extensions/ding]
+start-corner='top-left'
+arrangeorder='NAME'

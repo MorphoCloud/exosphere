@@ -120,6 +120,13 @@
     src: '01-morphocloud-favorites.j2'
     dest: '/etc/dconf/db/local.d/01-morphocloud-favorites'
 
+# MorphoCloud: desktop icons from the top-left, by name. Ubuntu's session-only
+# default is the bottom-right corner, by name descending (see the template).
+- name: 'Desktop icons start at the top-left'
+  template:
+    src: '02-morphocloud-desktop-icons.j2'
+    dest: '/etc/dconf/db/local.d/02-morphocloud-desktop-icons'
+
 - name: 'dconf database updated'
   command: 'dconf update'
 
